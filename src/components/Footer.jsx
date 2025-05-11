@@ -1,7 +1,7 @@
 function Footer() {
     return (
         <footer className="bg-black text-white mt-24 py-16 w-full">
-        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12">
+        <div className="max-w-7xl mx-auto px-10 grid grid-cols-1 md:grid-cols-2 gap-12">
           {/* Contact Info */}
           <div>
             <h3 className="text-4xl font-bold font-bodoni mb-4">Dappr.</h3>
