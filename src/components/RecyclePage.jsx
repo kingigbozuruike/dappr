@@ -2,6 +2,14 @@ import React, { useState } from 'react';
 
 function RecyclePage() {
   const [openFaq, setOpenFaq] = useState(null);
+  const [formData, setFormData] = useState({
+    fullName: '',
+    email: '',
+    address: '',
+    items: ''
+  });
+  const [errors, setErrors] = useState({});
+  const [isSubmitted, setIsSubmitted] = useState(false);
 
   const faqs = [
     {
@@ -20,6 +28,49 @@ function RecyclePage() {
 
   const toggleFaq = (index) => {
     setOpenFaq(openFaq === index ? null : index);
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+    // Clear error when user starts typing
+    if (errors[name]) {
+      setErrors(prev => ({
+        ...prev,
+        [name]: ''
+      }));
+    }
+  };
+
+  const validateForm = () => {
+    const newErrors = {};
+    if (!formData.fullName.trim()) newErrors.fullName = 'Full name is required';
+    if (!formData.email.trim()) newErrors.email = 'Email is required';
+    else if (!/\S+@\S+\.\S+/.test(formData.email)) newErrors.email = 'Email is invalid';
+    if (!formData.address.trim()) newErrors.address = 'Shipping address is required';
+    if (!formData.items) newErrors.items = 'Number of items is required';
+    else if (parseInt(formData.items) < 1) newErrors.items = 'Must be at least 1 item';
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (validateForm()) {
+      // Here you would typically send the data to your backend
+      console.log('Form submitted:', formData);
+      setIsSubmitted(true);
+      setFormData({
+        fullName: '',
+        email: '',
+        address: '',
+        items: ''
+      });
+    }
   };
 
   return (
@@ -63,50 +114,77 @@ function RecyclePage() {
 
         {/* Start Recycling Form */}
         <section className="bg-gray-50 p-8 rounded-lg">
-          <h2 className="text-3xl font-bold font-bodoni mb-6">Start Your Recycling Journey</h2>
-          <form className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Full Name</label>
-                <input
-                  type="text"
-                  className="w-full px-4 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-black focus:border-transparent"
-                  placeholder="Enter your full name"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Email</label>
-                <input
-                  type="email"
-                  className="w-full px-4 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-black focus:border-transparent"
-                  placeholder="Enter your email"
-                />
-              </div>
+          {isSubmitted ? (
+            <div className="text-center py-8">
+              <h3 className="text-2xl font-bold font-bodoni mb-4 text-green-600">Thank You!</h3>
+              <p className="text-gray-600 font-poppins">
+                Your shipping label request has been received. We'll send the label to your email within 24 hours.
+              </p>
             </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Shipping Address</label>
-              <input
-                type="text"
-                className="w-full px-4 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-black focus:border-transparent"
-                placeholder="Enter your shipping address"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Number of Items</label>
-              <input
-                type="number"
-                className="w-full px-4 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-black focus:border-transparent"
-                placeholder="How many items are you recycling?"
-                min="1"
-              />
-            </div>
-            <button
-              type="submit"
-              className="w-full bg-black text-white py-3 rounded-lg border border-gray-500 hover:bg-white hover:text-black transition duration-300 font-medium active:scale-95 cursor-pointer"
-            >
-              Request Shipping Label
-            </button>
-          </form>
+          ) : (
+            <>
+              <h2 className="text-3xl font-bold font-bodoni mb-6">Start Your Recycling Journey</h2>
+              <form onSubmit={handleSubmit} className="space-y-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Full Name</label>
+                    <input
+                      type="text"
+                      name="fullName"
+                      value={formData.fullName}
+                      onChange={handleChange}
+                      className={`w-full px-4 py-2 border ${errors.fullName ? 'border-red-500' : 'border-gray-300'} rounded focus:ring-2 focus:ring-black focus:border-transparent`}
+                      placeholder="Enter your full name"
+                    />
+                    {errors.fullName && <p className="mt-1 text-sm text-red-500">{errors.fullName}</p>}
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Email</label>
+                    <input
+                      type="email"
+                      name="email"
+                      value={formData.email}
+                      onChange={handleChange}
+                      className={`w-full px-4 py-2 border ${errors.email ? 'border-red-500' : 'border-gray-300'} rounded focus:ring-2 focus:ring-black focus:border-transparent`}
+                      placeholder="Enter your email"
+                    />
+                    {errors.email && <p className="mt-1 text-sm text-red-500">{errors.email}</p>}
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Shipping Address</label>
+                  <input
+                    type="text"
+                    name="address"
+                    value={formData.address}
+                    onChange={handleChange}
+                    className={`w-full px-4 py-2 border ${errors.address ? 'border-red-500' : 'border-gray-300'} rounded focus:ring-2 focus:ring-black focus:border-transparent`}
+                    placeholder="Enter your shipping address"
+                  />
+                  {errors.address && <p className="mt-1 text-sm text-red-500">{errors.address}</p>}
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Number of Items</label>
+                  <input
+                    type="number"
+                    name="items"
+                    value={formData.items}
+                    onChange={handleChange}
+                    className={`w-full px-4 py-2 border ${errors.items ? 'border-red-500' : 'border-gray-300'} rounded focus:ring-2 focus:ring-black focus:border-transparent`}
+                    placeholder="How many items are you recycling?"
+                    min="1"
+                  />
+                  {errors.items && <p className="mt-1 text-sm text-red-500">{errors.items}</p>}
+                </div>
+                <button
+                  type="submit"
+                  className="w-full bg-black text-white py-3 rounded-lg border border-gray-500 hover:bg-white hover:text-black transition duration-300 font-medium active:scale-95 cursor-pointer"
+                >
+                  Request Shipping Label
+                </button>
+              </form>
+            </>
+          )}
         </section>
 
         {/* FAQ Section */}
