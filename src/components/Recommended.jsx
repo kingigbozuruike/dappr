@@ -59,7 +59,7 @@ function Recommended() {
         ))}
         </div>
         <div className="mt-10 text-center">
-            <button className="font-bodoni px-6 py-3 bg-black text-white rounded hover:bg-gray-800 transition font-medium">
+            <button className="font-bodoni px-6 py-3 bg-black text-white rounded border border-gray-500 hover:bg-white hover:text-black transition duration-300">
                 View All Products
             </button>
         </div>

@@ -20,7 +20,7 @@ function Footer() {
           <form className="bg-white p-6 rounded-lg shadow-md space-y-4">
             <h4 className="text-xl font-semibold font-bodoni mb-2 text-black">Contact Us</h4>
             <input
-              type="text"
+              type="Name"
               placeholder="Name"
               className="w-full px-4 py-2 border border-gray-300 rounded"
             />
@@ -36,7 +36,7 @@ function Footer() {
             />
             <button
               type="submit"
-              className="bg-black text-white px-4 py-2 rounded hover:bg-gray-800 transition"
+              className="bg-black text-white px-4 py-2 rounded border border-gray-500 hover:bg-white hover:text-black transition duration-300"
             >
               Send Message
             </button>

@@ -20,7 +20,7 @@ function Hero() {
           <p className="font-poppins text-gray-600 mb-8">
             Discover style, skincare, hair, and makeup curated with melanin in mind. From confident streetwear to natural beauty must-haves — it's all here.
           </p>
-          <button className="bg-black text-white px-6 py-3 rounded hover:bg-gray-900 transition">
+          <button className="bg-black text-white px-6 py-3 rounded border border-gray-500 hover:bg-white hover:text-black transition duration-300">
             Shop Now
           </button>
         </div>
