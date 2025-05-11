@@ -1,10 +1,12 @@
 // src/components/Navbar.jsx
+import { Link } from 'react-router-dom';
+
 function Navbar() {
     return (
       <header className="w-full px-6 py-4 flex justify-between items-center">
-        <h1 className="font-bodoni text-4xl font-semibold tracking-tight text-black">
+        <Link to="/" className="font-bodoni text-4xl font-semibold tracking-tight text-black hover:opacity-80 transition-opacity">
           Dappr.
-        </h1>
+        </Link>
   
         <nav className="font-poppins flex space-x-6 text-sm text-gray-800">
           <a href="#" className="hover:text-gray-400 transition duration-200">Clothing</a>
