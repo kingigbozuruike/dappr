@@ -17,7 +17,7 @@ function Recycle() {
             and exclusive Dappr perks.
           </p>
           <Link to="/recycle">
-            <button className="bg-black text-white px-6 py-3 rounded border border-gray-500 hover:bg-white hover:text-black transition duration-300">
+            <button className="bg-black text-white px-6 py-3 rounded border border-gray-500 hover:bg-white hover:text-black transition duration-300 active:scale-95">
               Start Recycling
             </button>
           </Link>

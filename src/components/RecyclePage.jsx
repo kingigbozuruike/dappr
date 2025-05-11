@@ -102,7 +102,7 @@ function RecyclePage() {
             </div>
             <button
               type="submit"
-              className="w-full bg-black text-white py-3 rounded-lg border border-gray-500 hover:bg-white hover:text-black transition duration-300 font-medium"
+              className="w-full bg-black text-white py-3 rounded-lg border border-gray-500 hover:bg-white hover:text-black transition duration-300 font-medium active:scale-95"
             >
               Request Shipping Label
             </button>
