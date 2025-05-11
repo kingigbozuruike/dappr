@@ -23,7 +23,7 @@ function RecyclePage() {
   };
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white pt-16">
       {/* Header Section */}
       <div className="bg-black text-white py-16">
         <div className="max-w-7xl mx-auto px-10">
@@ -102,7 +102,7 @@ function RecyclePage() {
             </div>
             <button
               type="submit"
-              className="w-full bg-black text-white py-3 rounded-lg border border-gray-500 hover:bg-white hover:text-black transition duration-300 font-medium active:scale-95"
+              className="w-full bg-black text-white py-3 rounded-lg border border-gray-500 hover:bg-white hover:text-black transition duration-300 font-medium active:scale-95 cursor-pointer"
             >
               Request Shipping Label
             </button>
@@ -117,7 +117,7 @@ function RecyclePage() {
               <div key={index} className="border-b border-gray-200">
                 <button
                   onClick={() => toggleFaq(index)}
-                  className="w-full flex justify-between items-center py-4 text-left"
+                  className="w-full flex justify-between items-center py-4 text-left cursor-pointer"
                 >
                   <h3 className="text-xl font-semibold">{faq.question}</h3>
                   <svg

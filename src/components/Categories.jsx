@@ -47,7 +47,7 @@ function Categories() {
                             delay: index * 0.1 
                         }}
                         viewport={{ once: true }}
-                        className="relative h-64 rounded-xl overflow-hidden shadow-md transition duration-300 transform hover:scale-105 hover:-rotate-1"
+                        className="relative h-64 rounded-xl overflow-hidden shadow-md transition duration-300 transform hover:scale-105 hover:-rotate-1 cursor-pointer"
                     >
                         <img
                             src={image}
