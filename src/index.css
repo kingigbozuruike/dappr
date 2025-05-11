@@ -1,0 +1,21 @@
+@import url(https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..900;1,6..96,400..900&family=Cormorant+Garamond:ital,wght@0,300..700;1,300..700&family=Poppins:wght@300;400;500;600;700&display=swap);
+@import "tailwindcss";
+
+
+@theme {
+  --font-poppins: 'Poppins', sans-serif;
+  --font-bodoni: 'Bodoni Moda', serif;
+  --font-cormorant: 'Cormorant Garamond', serif;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+}
+
+#root {
+  margin: 0;
+  padding: 0;
+}
