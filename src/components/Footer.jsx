@@ -1,4 +1,28 @@
+import React, { useState } from 'react';
+
 function Footer() {
+    const [formData, setFormData] = useState({
+        name: '',
+        email: '',
+        message: ''
+    });
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        // Here you would typically handle the form submission
+        console.log('Form submitted:', formData);
+        // Reset form after submission
+        setFormData({ name: '', email: '', message: '' });
+    };
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setFormData(prev => ({
+            ...prev,
+            [name]: value
+        }));
+    };
+
     return (
         <footer className="bg-black text-white mt-24 py-16 w-full">
         <div className="max-w-7xl mx-auto px-10 grid grid-cols-1 md:grid-cols-2 gap-12">
@@ -17,28 +41,49 @@ function Footer() {
           </div>
   
           {/* Contact Form */}
-          <form className="bg-white p-6 rounded-lg shadow-md space-y-4">
+          <form onSubmit={handleSubmit} className="bg-white p-6 rounded-lg shadow-md space-y-4">
             <h4 className="text-xl font-semibold font-bodoni mb-2 text-black">Contact Us</h4>
-            <input
-              type="Name"
-              placeholder="Name"
-              className="w-full px-4 py-2 border border-gray-300 rounded"
-            />
-            <input
-              type="email"
-              placeholder="Email"
-              className="w-full px-4 py-2 border border-gray-300 rounded"
-            />
-            <textarea
-              rows="4"
-              placeholder="Your message..."
-              className="w-full px-4 py-2 border border-gray-300 rounded"
-            />
+            <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Full Name</label>
+                <input
+                    type="text"
+                    name="name"
+                    value={formData.name}
+                    onChange={handleChange}
+                    className="w-full px-4 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-black focus:border-transparent text-black"
+                    placeholder="Enter your full name"
+                    required
+                />
+            </div>
+            <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Email</label>
+                <input
+                    type="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    className="w-full px-4 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-black focus:border-transparent text-black"
+                    placeholder="Enter your email"
+                    required
+                />
+            </div>
+            <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Message</label>
+                <textarea
+                    name="message"
+                    value={formData.message}
+                    onChange={handleChange}
+                    rows="4"
+                    className="w-full px-4 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-black focus:border-transparent text-black"
+                    placeholder="Your message..."
+                    required
+                />
+            </div>
             <button
-              type="submit"
-              className="bg-black text-white px-4 py-2 rounded border border-gray-500 hover:bg-white hover:text-black transition duration-300 active:scale-95"
+                type="submit"
+                className="w-full bg-black text-white px-4 py-2 rounded border border-gray-500 hover:bg-white hover:text-black transition duration-300 active:scale-95"
             >
-              Send Message
+                Send Message
             </button>
           </form>
         </div>
