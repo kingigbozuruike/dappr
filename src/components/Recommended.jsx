@@ -15,7 +15,7 @@ import Product11 from "../assets/products/product11.jpg";
 import Product12 from "../assets/products/product12.jpg";
 
 const products = [
-  { name: "Men's \"Faither over Fear\" shorts.", price: "$42.00", image: Product1 },
+  { name: "Men's \"Faith over Fear\" shorts.", price: "$42.00", image: Product1 },
   { name: "ASOS Design Boxy Oversized Abstract Graphic T-Shirt", price: "$45.00", image: Product2 },
   { name: "Modern Men's Abstract Street Art T-Shirt", price: "$40.00", image: Product3 },
   { name: "Textured Gray Full Suit - Fitted ", price: "$35.00", image: Product4 },

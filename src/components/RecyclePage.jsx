@@ -1,6 +1,27 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 function RecyclePage() {
+  const [openFaq, setOpenFaq] = useState(null);
+
+  const faqs = [
+    {
+      question: "What items can I recycle?",
+      answer: "We accept all types of clothing items in good condition. This includes shirts, pants, dresses, jackets, and accessories. Items should be clean and free of major damage."
+    },
+    {
+      question: "How do I earn points?",
+      answer: "You earn 10 points for each item you recycle. Points can be redeemed for store credit or exclusive Dappr perks. Points are added to your account once we receive your items."
+    },
+    {
+      question: "How long does shipping take?",
+      answer: "Once you request a shipping label, you'll receive it via email within 24 hours. After sending your items, it typically takes 3-5 business days for us to receive them."
+    }
+  ];
+
+  const toggleFaq = (index) => {
+    setOpenFaq(openFaq === index ? null : index);
+  };
+
   return (
     <div className="min-h-screen bg-white">
       {/* Header Section */}
@@ -91,28 +112,41 @@ function RecyclePage() {
         {/* FAQ Section */}
         <section className="mt-16">
           <h2 className="text-3xl font-bold font-bodoni mb-8">Frequently Asked Questions</h2>
-          <div className="space-y-6">
-            <div className="border-b border-gray-200 pb-6">
-              <h3 className="text-xl font-semibold mb-2">What items can I recycle?</h3>
-              <p className="text-gray-600 font-poppins">
-                We accept all types of clothing items in good condition. This includes shirts, pants, dresses, 
-                jackets, and accessories. Items should be clean and free of major damage.
-              </p>
-            </div>
-            <div className="border-b border-gray-200 pb-6">
-              <h3 className="text-xl font-semibold mb-2">How do I earn points?</h3>
-              <p className="text-gray-600 font-poppins">
-                You earn 10 points for each item you recycle. Points can be redeemed for store credit 
-                or exclusive Dappr perks. Points are added to your account once we receive your items.
-              </p>
-            </div>
-            <div className="border-b border-gray-200 pb-6">
-              <h3 className="text-xl font-semibold mb-2">How long does shipping take?</h3>
-              <p className="text-gray-600 font-poppins">
-                Once you request a shipping label, you'll receive it via email within 24 hours. 
-                After sending your items, it typically takes 3-5 business days for us to receive them.
-              </p>
-            </div>
+          <div className="space-y-4">
+            {faqs.map((faq, index) => (
+              <div key={index} className="border-b border-gray-200">
+                <button
+                  onClick={() => toggleFaq(index)}
+                  className="w-full flex justify-between items-center py-4 text-left"
+                >
+                  <h3 className="text-xl font-semibold">{faq.question}</h3>
+                  <svg
+                    className={`w-6 h-6 transform transition-transform duration-300 ${
+                      openFaq === index ? 'rotate-180' : ''
+                    }`}
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M19 9l-7 7-7-7"
+                    />
+                  </svg>
+                </button>
+                <div
+                  className={`overflow-hidden transition-all duration-300 ${
+                    openFaq === index ? 'max-h-40 opacity-100' : 'max-h-0 opacity-0'
+                  }`}
+                >
+                  <p className="text-gray-600 font-poppins pb-4">
+                    {faq.answer}
+                  </p>
+                </div>
+              </div>
+            ))}
           </div>
         </section>
       </div>
