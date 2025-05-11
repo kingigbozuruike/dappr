@@ -40,17 +40,19 @@ function Recommended() {
         {products.map(({ name, price, image }) => (
             <motion.div
                 key={name}
-                initial={{ filter: "grayscale(100%)", opacity: 1 }}
-                whileInView={{ filter: "grayscale(0%)", opacity: 1 }}
+                initial={{ opacity: 1 }}
+                whileInView={{ opacity: 1 }}
                 transition={{ duration: 1, ease: "easeOut" }}
                 viewport={{ once: true, amount: 0.3 }}
-                className="bg-white rounded-lg overflow-hidden shadow-md transition-transform duration-300 hover:scale-105"
+                className="bg-white rounded-lg overflow-hidden shadow-md transition-all duration-300 hover:scale-105 group"
             >
-                <img
-                src={image}
-                alt={name}
-                className="w-full h-60 object-cover"
-                />
+                <div className="relative overflow-hidden">
+                    <img
+                    src={image}
+                    alt={name}
+                    className="w-full h-60 object-cover filter grayscale transition-all duration-300 group-hover:grayscale-0"
+                    />
+                </div>
                 <div className="p-4">
                 <h3 className="font-poppins text-lg font-medium mb-1">{name}</h3>
                 <p className="text-gray-700 font-semibold">{price}</p>
