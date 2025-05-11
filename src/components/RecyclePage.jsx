@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { HiOutlinePause, HiOutlinePlay } from 'react-icons/hi';
+import { FaRecycle, FaLeaf, FaTshirt } from 'react-icons/fa';
 
 function RecyclePage() {
   const [openFaq, setOpenFaq] = useState(null);
@@ -14,6 +15,38 @@ function RecyclePage() {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
+  const [estimatedPoints, setEstimatedPoints] = useState(0);
+  const [calculatorItems, setCalculatorItems] = useState(0);
+
+  // Mock user progress data (replace with actual data from your backend)
+  const userProgress = {
+    itemsRecycled: 45,
+    pointsEarned: 450,
+    pointsToNextTier: 550,
+    co2Saved: 22.5, // kg
+    nextTier: "Gold"
+  };
+
+  const testimonials = [
+    {
+      name: "Sarah M.",
+      points: 1200,
+      text: "I've recycled over 100 items with Dappr and earned enough points for a complete wardrobe refresh!",
+      image: "/images/testimonial1.png"
+    },
+    {
+      name: "James K.",
+      points: 850,
+      text: "The process is so easy, and I love knowing my clothes are being recycled responsibly.",
+      image: "/images/testimonial2.png"
+    },
+    {
+      name: "Emma L.",
+      points: 1500,
+      text: "Dappr's recycling program has helped me maintain a sustainable lifestyle while earning great rewards.",
+      image: "/images/testimonial3.png"
+    }
+  ];
 
   const carouselImages = [
     '/images/Recycle page 0.png',
@@ -101,6 +134,11 @@ function RecyclePage() {
     }
   };
 
+  const calculatePoints = (items) => {
+    setCalculatorItems(items);
+    setEstimatedPoints(items * 10); // 10 points per item
+  };
+
   const fadeInUp = {
     hidden: { opacity: 0, y: 20 },
     visible: { opacity: 1, y: 0 }
@@ -177,6 +215,98 @@ function RecyclePage() {
           ))}
         </div>
       </div>
+
+      {/* Progress Tracking Section */}
+      <motion.section 
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true }}
+        variants={fadeInUp}
+        className="max-w-7xl mx-auto px-10 py-16"
+      >
+        <h2 className="text-3xl font-bold font-bodoni mb-8">Your Recycling Impact</h2>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="bg-gray-50 p-6 rounded-lg">
+            <div className="text-2xl font-bold text-black mb-2">{userProgress.itemsRecycled}</div>
+            <p className="text-gray-600 font-poppins">Items Recycled</p>
+          </div>
+          <div className="bg-gray-50 p-6 rounded-lg">
+            <div className="text-2xl font-bold text-black mb-2">{userProgress.pointsEarned} Points</div>
+            <p className="text-gray-600 font-poppins">{userProgress.pointsToNextTier} to {userProgress.nextTier} Tier</p>
+            <div className="w-full bg-gray-200 rounded-full h-2.5 mt-2">
+              <div 
+                className="bg-black h-2.5 rounded-full" 
+                style={{ width: `${(userProgress.pointsEarned / (userProgress.pointsEarned + userProgress.pointsToNextTier)) * 100}%` }}
+              ></div>
+            </div>
+          </div>
+          <div className="bg-gray-50 p-6 rounded-lg">
+            <div className="text-2xl font-bold text-black mb-2">{userProgress.co2Saved} kg</div>
+            <p className="text-gray-600 font-poppins">CO2 Saved</p>
+          </div>
+        </div>
+      </motion.section>
+
+      {/* Points Calculator */}
+      <motion.section 
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true }}
+        variants={fadeInUp}
+        className="max-w-7xl mx-auto px-10 py-16 bg-gray-50"
+      >
+        <h2 className="text-3xl font-bold font-bodoni mb-8">Points Calculator</h2>
+        <div className="max-w-md mx-auto">
+          <div className="mb-6">
+            <label className="block text-sm font-medium text-gray-700 mb-2">Number of Items</label>
+            <input
+              type="number"
+              min="1"
+              value={calculatorItems}
+              onChange={(e) => calculatePoints(parseInt(e.target.value) || 0)}
+              className="w-full px-4 py-2 border border-gray-300 rounded focus:ring-2 focus:ring-black focus:border-transparent"
+            />
+          </div>
+          <div className="text-center">
+            <div className="text-3xl font-bold text-black mb-2">{estimatedPoints} Points</div>
+            <p className="text-gray-600 font-poppins">Estimated points you'll earn</p>
+          </div>
+        </div>
+      </motion.section>
+
+      {/* Testimonials Section */}
+      <motion.section 
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true }}
+        variants={fadeInUp}
+        className="max-w-7xl mx-auto px-10 py-16"
+      >
+        <h2 className="text-3xl font-bold font-bodoni mb-8">Success Stories</h2>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {testimonials.map((testimonial, index) => (
+            <motion.div
+              key={index}
+              variants={fadeInUp}
+              transition={{ delay: index * 0.2 }}
+              className="bg-gray-50 p-6 rounded-lg"
+            >
+              <div className="flex items-center mb-4">
+                <img
+                  src={testimonial.image}
+                  alt={testimonial.name}
+                  className="w-12 h-12 rounded-full object-cover mr-4"
+                />
+                <div>
+                  <div className="font-bold">{testimonial.name}</div>
+                  <div className="text-sm text-gray-600">{testimonial.points} Points</div>
+                </div>
+              </div>
+              <p className="text-gray-600 font-poppins italic">"{testimonial.text}"</p>
+            </motion.div>
+          ))}
+        </div>
+      </motion.section>
 
       {/* Main Content */}
       <div className="max-w-7xl mx-auto px-10 py-16">
