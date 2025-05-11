@@ -18,6 +18,11 @@ function RecyclePage() {
   const [estimatedPoints, setEstimatedPoints] = useState(0);
   const [calculatorItems, setCalculatorItems] = useState(0);
 
+  // Scroll to top when component mounts
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   // Mock user progress data (replace with actual data from your backend)
   const userProgress = {
     itemsRecycled: 45,
