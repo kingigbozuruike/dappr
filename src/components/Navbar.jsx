@@ -132,7 +132,9 @@ function Navbar() {
             </span>
           </button>
   
-          <button className="bg-black text-sm text-white border border-gray-500 px-3 py-1 rounded hover:bg-white hover:text-black transition duration-300 cursor-pointer">
+          <button className="bg-black text-sm text-white border border-gray-500 px-3 py-1 rounded hover:bg-white hover:text-black transition duration-300 cursor-pointer"
+            onClick={() => navigate('/auth')}
+          >
             Sign In
           </button>
         </div>

@@ -6,6 +6,7 @@ import Recycle from "./components/Recycle";
 import Recommended from "./components/Recommended";
 import Footer from "./components/Footer";
 import RecyclePage from "./components/RecyclePage";
+import AuthPage from "./components/AuthPage";
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
             </>
           } />
           <Route path="/recycle" element={<RecyclePage />} />
+          <Route path="/auth" element={<AuthPage />} />
         </Routes>
         <Footer />
       </div>
