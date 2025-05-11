@@ -1,4 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
+import { HiOutlinePause, HiOutlinePlay } from 'react-icons/hi';
 
 function RecyclePage() {
   const [openFaq, setOpenFaq] = useState(null);
@@ -10,6 +12,32 @@ function RecyclePage() {
   });
   const [errors, setErrors] = useState({});
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [isPaused, setIsPaused] = useState(false);
+
+  const carouselImages = [
+    '/images/Recycle page 0.png',
+    '/images/Recycle page 2.jpeg',
+    '/images/Recycle page 3.jpeg',
+    '/images/Recycle page 4.jpeg',
+    '/images/Recycle page 5.png'
+  ];
+
+  useEffect(() => {
+    if (!isPaused) {
+      const timer = setInterval(() => {
+        setCurrentImageIndex((prevIndex) => 
+          prevIndex === carouselImages.length - 1 ? 0 : prevIndex + 1
+        );
+      }, 5000); // Change image every 5 seconds
+
+      return () => clearInterval(timer);
+    }
+  }, [isPaused, carouselImages.length]);
+
+  const togglePause = () => {
+    setIsPaused(!isPaused);
+  };
 
   const faqs = [
     {
@@ -73,47 +101,135 @@ function RecyclePage() {
     }
   };
 
+  const fadeInUp = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { opacity: 1, y: 0 }
+  };
+
   return (
     <div className="min-h-screen bg-white pt-16">
       {/* Header Section */}
       <div className="bg-black text-white py-16">
         <div className="max-w-7xl mx-auto px-10">
-          <h1 className="text-5xl font-bold font-bodoni mb-4">Recycle with Dappr</h1>
-          <p className="text-xl font-poppins text-gray-300">
+          <motion.h1 
+            initial="hidden"
+            animate="visible"
+            variants={fadeInUp}
+            className="text-5xl font-bold font-bodoni mb-4"
+          >
+            Recycle with Dappr
+          </motion.h1>
+          <motion.p 
+            initial="hidden"
+            animate="visible"
+            variants={fadeInUp}
+            transition={{ delay: 0.2 }}
+            className="text-xl font-poppins text-gray-300"
+          >
             Turn your old clothes into rewards. Earn points, save the planet, and get exclusive perks.
-          </p>
+          </motion.p>
+        </div>
+      </div>
+
+      {/* Carousel Section */}
+      <div className="relative w-full h-[600px] overflow-hidden">
+        {carouselImages.map((image, index) => (
+          <motion.div
+            key={index}
+            className="absolute w-full h-full flex items-center justify-center"
+            initial={{ opacity: 0 }}
+            animate={{ 
+              opacity: currentImageIndex === index ? 1 : 0,
+              x: `${(index - currentImageIndex) * 100}%`
+            }}
+            transition={{ duration: 0.5 }}
+          >
+            <img
+              src={image}
+              alt={`Recycling image ${index + 1}`}
+              className="w-full h-full object-contain"
+            />
+          </motion.div>
+        ))}
+        <button
+          onClick={togglePause}
+          className="absolute bottom-4 right-4 bg-black bg-opacity-50 text-white p-2 rounded-full hover:bg-opacity-75 transition-all duration-300 cursor-pointer z-10"
+        >
+          {isPaused ? (
+            <HiOutlinePlay className="w-6 h-6" />
+          ) : (
+            <HiOutlinePause className="w-6 h-6" />
+          )}
+        </button>
+        {/* Navigation Dots */}
+        <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2 z-10">
+          {carouselImages.map((_, index) => (
+            <button
+              key={index}
+              onClick={() => setCurrentImageIndex(index)}
+              className={`w-3 h-3 rounded-full transition-all duration-300 ${
+                currentImageIndex === index 
+                  ? 'bg-black scale-125' 
+                  : 'bg-gray-400 hover:bg-gray-600'
+              }`}
+              aria-label={`Go to slide ${index + 1}`}
+            />
+          ))}
         </div>
       </div>
 
       {/* Main Content */}
       <div className="max-w-7xl mx-auto px-10 py-16">
         {/* How It Works Section */}
-        <section className="mb-16">
+        <motion.section 
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+          variants={fadeInUp}
+          className="mb-16"
+        >
           <h2 className="text-3xl font-bold font-bodoni mb-8">How It Works</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="bg-gray-50 p-6 rounded-lg">
+            <motion.div 
+              variants={fadeInUp}
+              className="bg-gray-50 p-6 rounded-lg"
+            >
               <div className="text-2xl font-bold text-black mb-4">1. Collect</div>
               <p className="text-gray-600 font-poppins">
                 Gather your gently used clothing items that you no longer wear.
               </p>
-            </div>
-            <div className="bg-gray-50 p-6 rounded-lg">
+            </motion.div>
+            <motion.div 
+              variants={fadeInUp}
+              transition={{ delay: 0.2 }}
+              className="bg-gray-50 p-6 rounded-lg"
+            >
               <div className="text-2xl font-bold text-black mb-4">2. Ship</div>
               <p className="text-gray-600 font-poppins">
                 Use our prepaid shipping label to send your items to our recycling center.
               </p>
-            </div>
-            <div className="bg-gray-50 p-6 rounded-lg">
+            </motion.div>
+            <motion.div 
+              variants={fadeInUp}
+              transition={{ delay: 0.4 }}
+              className="bg-gray-50 p-6 rounded-lg"
+            >
               <div className="text-2xl font-bold text-black mb-4">3. Earn</div>
               <p className="text-gray-600 font-poppins">
                 Get 10 points per item, redeemable for store credit and exclusive perks.
               </p>
-            </div>
+            </motion.div>
           </div>
-        </section>
+        </motion.section>
 
         {/* Start Recycling Form */}
-        <section className="bg-gray-50 p-8 rounded-lg">
+        <motion.section 
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+          variants={fadeInUp}
+          className="bg-gray-50 p-8 rounded-lg"
+        >
           {isSubmitted ? (
             <div className="text-center py-8">
               <h3 className="text-2xl font-bold font-bodoni mb-4 text-green-600">Thank You!</h3>
@@ -185,14 +301,25 @@ function RecyclePage() {
               </form>
             </>
           )}
-        </section>
+        </motion.section>
 
         {/* FAQ Section */}
-        <section className="mt-16">
+        <motion.section 
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+          variants={fadeInUp}
+          className="mt-16"
+        >
           <h2 className="text-3xl font-bold font-bodoni mb-8">Frequently Asked Questions</h2>
           <div className="space-y-4">
             {faqs.map((faq, index) => (
-              <div key={index} className="border-b border-gray-200">
+              <motion.div 
+                key={index}
+                variants={fadeInUp}
+                transition={{ delay: index * 0.1 }}
+                className="border-b border-gray-200"
+              >
                 <button
                   onClick={() => toggleFaq(index)}
                   className="w-full flex justify-between items-center py-4 text-left cursor-pointer"
@@ -223,10 +350,10 @@ function RecyclePage() {
                     {faq.answer}
                   </p>
                 </div>
-              </div>
+              </motion.div>
             ))}
           </div>
-        </section>
+        </motion.section>
       </div>
     </div>
   );
