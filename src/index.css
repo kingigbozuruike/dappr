@@ -19,3 +19,8 @@ html, body {
   margin: 0;
   padding: 0;
 }
+
+.monochrome {
+  filter: grayscale(100%);
+  transition: filter 1s ease-in-out 5s;
+}

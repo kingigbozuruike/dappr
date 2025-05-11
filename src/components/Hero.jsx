@@ -11,7 +11,7 @@ import HeroImage7 from "../assets/testing7.png";
 
 function Hero() {
     return (
-      <section className="flex justify-between items-center gap-12 mt-12">
+      <section className="flex justify-between items-center gap-12 mt-12 px-10 pt-10 pb-16">
         {/* Left content */}
         <div className="max-w-xl pl-15 pt-10">
           <h1 className="font-bodoni text-5xl font-bold leading-tight mb-6">
