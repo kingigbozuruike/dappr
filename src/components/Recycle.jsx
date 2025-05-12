@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import RecycleImage from "../assets/recycle.png";
 
 function Recycle() {
@@ -15,9 +16,11 @@ function Recycle() {
             you earn <span className="font-semibold text-black">10 points</span> — redeemable for store credit
             and exclusive Dappr perks.
           </p>
-          <button className="bg-black text-white px-6 py-3 rounded font-medium hover:bg-gray-800 transition">
-            Start Recycling
-          </button>
+          <Link to="/recycle">
+            <button className="bg-black text-white px-6 py-3 rounded border border-gray-500 hover:bg-white hover:text-black transition duration-300 active:scale-95 cursor-pointer">
+              Start Recycling
+            </button>
+          </Link>
         </div>
 
         {/* Right Image */}

@@ -15,7 +15,7 @@ import Product11 from "../assets/products/product11.jpg";
 import Product12 from "../assets/products/product12.jpg";
 
 const products = [
-  { name: "Men's \"Faither over Fear\" shorts.", price: "$42.00", image: Product1 },
+  { name: "Men's \"Faith over Fear\" shorts.", price: "$42.00", image: Product1 },
   { name: "ASOS Design Boxy Oversized Abstract Graphic T-Shirt", price: "$45.00", image: Product2 },
   { name: "Modern Men's Abstract Street Art T-Shirt", price: "$40.00", image: Product3 },
   { name: "Textured Gray Full Suit - Fitted ", price: "$35.00", image: Product4 },
@@ -40,17 +40,19 @@ function Recommended() {
         {products.map(({ name, price, image }) => (
             <motion.div
                 key={name}
-                initial={{ filter: "grayscale(100%)", opacity: 1 }}
-                whileInView={{ filter: "grayscale(0%)", opacity: 1 }}
+                initial={{ opacity: 1 }}
+                whileInView={{ opacity: 1 }}
                 transition={{ duration: 1, ease: "easeOut" }}
                 viewport={{ once: true, amount: 0.3 }}
-                className="bg-white rounded-lg overflow-hidden shadow-md transition-transform duration-300 hover:scale-105"
+                className="bg-white rounded-lg overflow-hidden shadow-md transition-all duration-300 hover:scale-105 group cursor-pointer"
             >
-                <img
-                src={image}
-                alt={name}
-                className="w-full h-60 object-cover"
-                />
+                <div className="relative overflow-hidden">
+                    <img
+                    src={image}
+                    alt={name}
+                    className="w-full h-60 object-cover filter grayscale transition-all duration-300 group-hover:grayscale-0"
+                    />
+                </div>
                 <div className="p-4">
                 <h3 className="font-poppins text-lg font-medium mb-1">{name}</h3>
                 <p className="text-gray-700 font-semibold">{price}</p>
@@ -59,7 +61,7 @@ function Recommended() {
         ))}
         </div>
         <div className="mt-10 text-center">
-            <button className="font-bodoni px-6 py-3 bg-black text-white rounded hover:bg-gray-800 transition font-medium">
+            <button className="font-bodoni px-6 py-3 bg-black text-white rounded border border-gray-500 hover:bg-white hover:text-black transition duration-300 active:scale-95 cursor-pointer">
                 View All Products
             </button>
         </div>
