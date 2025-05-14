@@ -95,7 +95,7 @@ function Navbar({ isSignedIn, onSignOut }) {
                 <div
                   className="absolute top-full left-0 z-30 mt-0"
                 >
-                  <div className="text-xl font-bold py-4 font-bodoni">
+                  <div className="text-sm font-poppins py-4">
                     {items.map((item) => (
                       <Link
                         key={item.name}
