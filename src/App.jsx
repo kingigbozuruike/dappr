@@ -12,6 +12,7 @@ import ProfilePage from "./components/ProfilePage";
 import ProductCategoryPage from "./components/ProductCategoryPage";
 import ProductsPage from "./components/ProductsPage";
 import CartPage from "./components/CartPage";
+import AIAssistant from "./components/AIAssistant";
 import { CartProvider } from "./context/CartContext";
 
 function App() {
@@ -37,28 +38,35 @@ function App() {
     <CartProvider>
       <Router>
         <div className={`min-h-screen w-full bg-white text-black`}>
-          <Navbar isSignedIn={isSignedIn} onSignOut={handleSignOut} />
           <Routes>
-            <Route path="/" element={
+            <Route path="/ai-assistant" element={<AIAssistant />} />
+            <Route path="*" element={
               <>
-                <Hero />
-                <Categories />
-                <div id="Recycle">
-                  <Recycle />
-                </div>
-                <Recommended />
+                <Navbar isSignedIn={isSignedIn} onSignOut={handleSignOut} />
+                <Routes>
+                  <Route path="/" element={
+                    <>
+                      <Hero />
+                      <Categories />
+                      <div id="Recycle">
+                        <Recycle />
+                      </div>
+                      <Recommended />
+                    </>
+                  } />
+                  <Route path="/recycle" element={<RecyclePage />} />
+                  <Route path="/auth" element={<AuthPage setIsSignedIn={setIsSignedIn} />} />
+                  <Route path="/profile" element={
+                    isSignedIn ? <ProfilePage /> : <AuthPage setIsSignedIn={setIsSignedIn} />
+                  } />
+                  <Route path="/category/:category" element={<ProductCategoryPage />} />
+                  <Route path="/products" element={<ProductsPage />} />
+                  <Route path="/cart" element={<CartPage />} />
+                </Routes>
+                <Footer />
               </>
             } />
-            <Route path="/recycle" element={<RecyclePage />} />
-            <Route path="/auth" element={<AuthPage setIsSignedIn={setIsSignedIn} />} />
-            <Route path="/profile" element={
-              isSignedIn ? <ProfilePage /> : <AuthPage setIsSignedIn={setIsSignedIn} />
-            } />
-            <Route path="/category/:category" element={<ProductCategoryPage />} />
-            <Route path="/products" element={<ProductsPage />} />
-            <Route path="/cart" element={<CartPage />} />
           </Routes>
-          <Footer />
         </div>
       </Router>
     </CartProvider>
