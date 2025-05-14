@@ -1,6 +1,7 @@
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay } from 'swiper/modules';
 import { motion } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 import 'swiper/css';
 import HeroImage1 from "../assets/testing.png";
 import HeroImage2 from "../assets/testing2.png";
@@ -11,6 +12,8 @@ import HeroImage6 from "../assets/testing6.png";
 import HeroImage7 from "../assets/testing7.png";
 
 function Hero() {
+    const navigate = useNavigate();
+    
     return (
       <section className="flex justify-between items-center gap-12 mt-24 px-10 pt-10 pb-16">
         {/* Left content */}
@@ -21,13 +24,16 @@ function Hero() {
           viewport={{ once: true }}
           className="max-w-xl pl-15 pt-10"
         >
-          <h1 className="font-bodoni text-5xl font-bold leading-tight mb-6">
-            The Ultimate Fashion Place for Melanated People
+          <h1 className="font-bodoni text-7xl font-bold leading-tight mb-6">
+            Black Fashion? It's All Here.
           </h1>
           <p className="font-poppins text-gray-600 mb-8">
-            Discover style, skincare, hair, and makeup curated with melanin in mind. From confident streetwear to natural beauty must-haves — it's all here.
+            Explore clothing, hair, skin care, and makeup inspired by Black expression — made for anyone who values bold, confident style.
           </p>
-          <button className="bg-black text-white px-6 py-3 rounded border border-gray-500 hover:bg-white hover:text-black transition duration-300 active:scale-95 cursor-pointer">
+          <button 
+            className="bg-black text-white px-6 py-3 rounded border border-gray-500 hover:bg-white hover:text-black transition duration-300 active:scale-95 cursor-pointer relative overflow-hidden shadow-md transition duration-300 transform hover:scale-105 hover:-rotate-1"
+            onClick={() => navigate('/products')}
+          >
             Shop Now
           </button>
         </motion.div>
@@ -75,4 +81,3 @@ function Hero() {
   }
   
   export default Hero;
-  
