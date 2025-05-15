@@ -250,7 +250,7 @@ const AIAssistant = () => {
             </svg>
             Back to Home
           </button>
-          <h1 className="text-2xl font-bold text-center flex-1">DapAI - Your Personal Shopping Assistant</h1>
+          <h1 className="text-2xl font-bold text-center flex-1">DapAI - Your Personal Stylist</h1>
           <div className="w-24"></div>
         </div>
       </header>
