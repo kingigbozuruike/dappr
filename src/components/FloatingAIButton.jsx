@@ -6,7 +6,7 @@ function FloatingAIButton() {
   return (
     <button
       onClick={() => navigate('/ai-assistant')}
-      className="md:hidden fixed bottom-4 left-4 z-50 flex items-center justify-center w-8 h-8 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-full shadow-lg hover:from-purple-700 hover:to-blue-700 transition-all duration-300 hover:scale-110 active:scale-95"
+      className="md:hidden fixed bottom-4 left-4 z-50 flex items-center justify-center w-8 h-8 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-full shadow-lg border border-black hover:from-purple-700 hover:to-blue-700 transition duration-300 cursor-pointer"
       aria-label="AI Stylist Assistant"
     >
       <div className="relative">

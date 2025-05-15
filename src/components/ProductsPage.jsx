@@ -173,7 +173,7 @@ export default function ProductsPage() {
         <button
           onClick={toggleFilterMenu}
           data-filter-toggle="true"
-          className="bg-black text-white p-3 rounded-full shadow-lg"
+          className="bg-black text-white p-3 rounded-full shadow-lg border-2 border-white hover:bg-white hover:text-black hover:border-black transition duration-300 cursor-pointer"
           aria-label="Open filters"
         >
           <FaFilter className="h-5 w-5" />

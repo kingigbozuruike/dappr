@@ -28,10 +28,12 @@ function Footer() {
       {/* Back to Top */}
       <button
         onClick={scrollToTop}
-        aria-label="Back to top"
-        className="fixed bottom-4 right-4 sm:bottom-8 sm:right-8 bg-black text-white p-2 sm:p-3 rounded-full border border-gray-500 hover:bg-white hover:text-black transition duration-300 active:scale-95 shadow-lg z-50"
+        className="fixed bottom-4 right-4 sm:bottom-8 sm:right-8 bg-black text-white p-2 sm:p-3 rounded-full border-2 border-white hover:bg-white hover:text-black hover:border-black transition duration-300 cursor-pointer shadow-lg z-50"
+        aria-label="Scroll to top"
       >
-        <FaArrowUp className="w-4 h-4 sm:w-6 sm:h-6" />
+        <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 10l7-7m0 0l7 7m-7-7v18" />
+        </svg>
       </button>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-10 grid grid-cols-1 md:grid-cols-2 gap-8 sm:gap-12">
