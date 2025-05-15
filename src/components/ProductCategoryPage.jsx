@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { useState, useEffect, useCallback, useRef } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { FaFilter, FaTimes } from "react-icons/fa";
 import { useCart } from "../context/CartContext";
 import ProductFilter from "./ProductFilter";
@@ -87,6 +87,7 @@ const getCategoryTitle = (slug) => ({
 
 function ProductCategoryPage() {
   const { category } = useParams();
+  const navigate = useNavigate();
   const [products, setProducts]           = useState([]);
   const [filteredProducts, setFiltered]   = useState([]);
   const { cart, addToCart, increaseQuantity, decreaseQuantity } = useCart();
@@ -151,6 +152,10 @@ function ProductCategoryPage() {
     document.addEventListener("mousedown", onClick);
     return () => document.removeEventListener("mousedown", onClick);
   }, []);
+
+  const handleProductClick = (id) => {
+    navigate(`/product/${category}/${id}`);
+  };
 
   return (
     <div className="container mx-auto px-4 py-12">
@@ -237,6 +242,7 @@ function ProductCategoryPage() {
               animate={{ opacity:1, y:0 }}
               transition={{ duration:0.5, delay: idx * 0.05 }}
               className="bg-white rounded-lg overflow-hidden shadow-md transition-transform duration-300 hover:scale-105 group cursor-pointer flex flex-col h-[420px] sm:h-[480px] md:h-[520px]"
+              onClick={() => handleProductClick(product.id)}
             >
               <div className="relative overflow-hidden h-48 sm:h-64 md:h-72 flex-shrink-0">
                 <img
@@ -277,7 +283,10 @@ function ProductCategoryPage() {
                     </div>
                     <div className="flex items-center justify-between border rounded-md p-1">
                       <button 
-                        onClick={() => decreaseQuantity(product.id, category)}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          decreaseQuantity(product.id, category);
+                        }}
                         className="w-8 h-8 flex items-center justify-center bg-black text-white rounded-l border border-black hover:bg-white hover:text-black transition-colors cursor-pointer"
                       >
                         –
@@ -286,7 +295,10 @@ function ProductCategoryPage() {
                         {cart[`${category}-${product.id}`]}
                       </span>
                       <button 
-                        onClick={() => increaseQuantity(product.id, category)}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          increaseQuantity(product.id, category);
+                        }}
                         className="w-8 h-8 flex items-center justify-center bg-black text-white rounded-r border border-black hover:bg-white hover:text-black transition-colors cursor-pointer"
                       >
                         +
@@ -295,7 +307,10 @@ function ProductCategoryPage() {
                   </div>
                 ) : (
                   <button 
-                    onClick={() => addToCart(product.id, category)}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      addToCart(product.id, category);
+                    }}
                     className="mt-auto w-full bg-black text-white text-xs sm:text-sm py-2 px-4 rounded border border-black hover:bg-white hover:text-black transition cursor-pointer"
                   >
                     Add to Cart

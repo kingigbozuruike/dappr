@@ -24,6 +24,7 @@ import CartPage from './components/CartPage';
 import AIAssistant from './components/AIAssistant';
 import SearchPage from './components/SearchPage';
 import FloatingAIButton from './components/FloatingAIButton';
+import ProductDetailPage from "./components/ProductDetailPage";
 
 function AppContent() {
   const [isSignedIn, setIsSignedIn] = useState(false);
@@ -98,6 +99,7 @@ function AppContent() {
                 {/* Products by category & list */}
                 <Route path="/category/:category" element={<ProductCategoryPage />} />
                 <Route path="/products" element={<ProductsPage />} />
+                <Route path="/product/:category/:id" element={<ProductDetailPage />} />
 
                 {/* Cart & search */}
                 <Route path="/cart" element={<CartPage />} />

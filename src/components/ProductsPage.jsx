@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { useState, useEffect, useCallback, useRef } from "react";
 import { useCart } from "../context/CartContext";
+import { useNavigate } from "react-router-dom";
 import ProductFilter from "./ProductFilter";
 import { productsByCategory } from "./ProductCategoryPage";
 import Product1 from "../assets/products/product1.webp";
@@ -57,6 +58,7 @@ export default function ProductsPage() {
   const [displayCount, setDisplayCount] = useState(8);
   const filterMenuRef = useRef();
   const { cart, addToCart, increaseQuantity, decreaseQuantity } = useCart();
+  const navigate = useNavigate();
 
   const categories = [
     { id: "all", name: "All Products" },
@@ -167,6 +169,10 @@ export default function ProductsPage() {
     document.addEventListener("mousedown", onClick);
     return () => document.removeEventListener("mousedown", onClick);
   }, []);
+
+  const handleProductClick = (category, id) => {
+    navigate(`/product/${category}/${id}`);
+  };
 
   return (
     <div className="mt-24 px-4 sm:px-10 py-8">
@@ -283,6 +289,7 @@ export default function ProductsPage() {
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.5 }}
                 className="bg-white rounded-lg overflow-hidden shadow-md transition-transform duration-300 hover:scale-105 group cursor-pointer flex flex-col h-[420px] sm:h-[480px] md:h-[520px]"
+                onClick={() => handleProductClick(p.category, p.id)}
               >
                 <div className="relative overflow-hidden h-48 sm:h-64 md:h-72 flex-shrink-0">
                   <img
