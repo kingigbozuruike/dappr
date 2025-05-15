@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FaGoogle, FaApple, FaFacebook, FaEye, FaEyeSlash, FaCheck } from 'react-icons/fa';
+import { useUser } from '../context/UserContext';
 
 const tiers = [
   {
@@ -46,6 +47,8 @@ function AuthPage({ setIsSignedIn }) {
   const [loading, setLoading] = useState(false);
   const [showCheck, setShowCheck] = useState(false);
 
+  const { setUserData } = useUser();
+
   const validate = () => {
     const newErrors = {};
     if (mode === 'signup' && !form.name.trim()) newErrors.name = 'Name is required.';
@@ -82,6 +85,28 @@ function AuthPage({ setIsSignedIn }) {
     localStorage.setItem('authToken', mockToken);
     localStorage.setItem('userName', form.name || 'Jane Doe');
     localStorage.setItem('userEmail', form.email);
+
+    // Set user data in context
+    setUserData({
+      name: form.name || 'David Orisakwe',
+      email: form.email,
+      phone: "(555) 123-4567",
+      recyclePoints: 450,
+      address: {
+        street: "123 Fashion Ave",
+        city: "New York",
+        state: "NY",
+        zip: "10001"
+      },
+      orders: [
+        { id: "ORD-12345", date: "2025-05-10", status: "Delivered", total: "$129.99" },
+        { id: "ORD-12346", date: "2025-04-28", status: "Processing", total: "$85.50" }
+      ],
+      recycleHistory: [
+        { id: "REC-789", date: "2025-05-01", items: "2 dresses, 1 pair of jeans", points: 45 },
+        { id: "REC-790", date: "2025-04-15", items: "3 shirts, 2 scarves", points: 30 }
+      ]
+    });
 
     setSuccess(true);
     setIsSignedIn(true);
@@ -204,7 +229,7 @@ function AuthPage({ setIsSignedIn }) {
             {mode === 'signin' && (
               <div className="mb-6 flex justify-between items-center text-sm">
                 <span>
-                  Don’t have an account?{' '}
+                  Don't have an account?{' '}
                   <button
                     type="button"
                     className="text-black font-semibold hover:underline"
@@ -256,7 +281,7 @@ function AuthPage({ setIsSignedIn }) {
             </button>
           </div>
 
-          {/* Mobile-only “View Tiers” button */}
+          {/* Mobile-only "View Tiers" button */}
           {mode === 'signup' && (
             <div className="mt-4 md:hidden">
               <button

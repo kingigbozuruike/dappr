@@ -5,8 +5,7 @@ import {
   HiOutlineMenu,
   HiOutlineX,
 } from 'react-icons/hi';
-import { RiCoinsLine } from 'react-icons/ri';
-import { FaUser } from 'react-icons/fa';
+import { FaUser, FaCoins } from 'react-icons/fa';
 import { useState, useEffect, useRef } from 'react';
 import { useCart } from '../context/CartContext';
 import { useUser } from '../context/UserContext';
@@ -149,7 +148,7 @@ export default function Navbar({ isSignedIn, onSignOut }) {
           <button
             onClick={() => navigate('/recycle')}
             className="hidden sm:inline-block bg-black text-white text-xs sm:text-sm
-                       px-3 py-2 rounded hover:bg-white hover:text-black transition"
+                       px-4 py-2 rounded border border-black hover:bg-white hover:text-black transition"
           >
             Recycle Now!
           </button>
@@ -158,8 +157,9 @@ export default function Navbar({ isSignedIn, onSignOut }) {
           <button
             onClick={() => navigate('/ai-assistant')}
             className="hidden sm:inline-flex items-center gap-1 text-xs sm:text-sm
-                       bg-gradient-to-r from-purple-600 to-blue-600 px-3 py-2 rounded-md
-                       hover:from-purple-700 hover:to-blue-700 transition"
+                       bg-gradient-to-r from-purple-600 to-blue-600 px-4 py-2 rounded
+                       border border-transparent hover:border-purple-600 hover:from-white hover:to-white
+                       hover:text-purple-600 transition"
           >
             AI Stylist
           </button>
@@ -197,47 +197,92 @@ export default function Navbar({ isSignedIn, onSignOut }) {
           </div>
 
           {/* Points */}
-          {isSignedIn && (
-            <button
-              onClick={() => navigate('/profile?tab=rewards')}
-              className="hidden sm:flex items-center gap-1 text-black hover:text-gray-600 transition"
+          {isSignedIn && userData && (
+            <Link
+              to="/profile?tab=rewards"
+              className="flex items-center gap-1 text-black-600 hover:text-gray-600 transition"
             >
-              <RiCoinsLine className="w-6 h-6" />
-              <span className="font-medium">{userData.recyclePoints}</span>
-            </button>
+              <FaCoins className="w-5 h-5" />
+              <span className="text-sm">{userData.recyclePoints}</span>
+            </Link>
           )}
 
           {/* Cart */}
-          <Link to="/cart" className="relative text-black hover:text-gray-600 transition">
-            <HiOutlineShoppingBag className="w-6 h-6" />
+          <Link
+            to="/cart"
+            className="text-black hover:text-gray-600 transition relative"
+          >
+            <HiOutlineShoppingBag className="w-5 h-5" />
             {totalItems > 0 && (
               <span className="absolute -top-2 -right-2 bg-black text-white text-xs
-                                rounded-full w-5 h-5 flex items-center justify-center">
-                {totalItems > 99 ? '99+' : totalItems}
+                             w-5 h-5 rounded-full flex items-center justify-center">
+                {totalItems}
               </span>
             )}
           </Link>
 
-          {/* Profile or Sign In */}
-          {isSignedIn ? (
+          {/* Profile/Sign In */}
+          {isSignedIn && userData ? (
             <div className="relative">
               <button
-                onClick={() => setIsMobileOpen(false) /* just to ensure mobile closes */}
-                className="w-9 h-9 rounded-full overflow-hidden border border-gray-200
-                           hover:opacity-90 transition cursor-pointer"
+                onClick={() => {
+                  setIsMobileOpen(false);
+                  setActiveDropdown(activeDropdown === 'profile' ? null : 'profile');
+                }}
+                className="w-8 h-8 rounded-full overflow-hidden border-2 border-black hover:border-gray-400 transition"
               >
-                <img src={profileImage} alt="Profile" className="w-full h-full object-cover" />
+                <img
+                  src={profileImage}
+                  alt="Profile"
+                  className="w-full h-full object-cover"
+                />
               </button>
-              {/* You can add a profile dropdown here similarly */}
+              {activeDropdown === 'profile' && (
+                <div className="absolute right-0 top-full mt-2 bg-white shadow-lg rounded-lg py-2 min-w-[200px] z-30">
+                  <div className="px-4 py-2 border-b border-gray-100">
+                    <p className="font-medium">{userData.name}</p>
+                    <p className="text-sm text-gray-500">{userData.email}</p>
+                  </div>
+                  <Link
+                    to="/profile"
+                    className="block px-4 py-2 text-gray-700 hover:bg-gray-50"
+                    onClick={() => setActiveDropdown(null)}
+                  >
+                    Profile
+                  </Link>
+                  <Link
+                    to="/profile?tab=orders"
+                    className="block px-4 py-2 text-gray-700 hover:bg-gray-50"
+                    onClick={() => setActiveDropdown(null)}
+                  >
+                    Orders
+                  </Link>
+                  <Link
+                    to="/profile?tab=rewards"
+                    className="block px-4 py-2 text-gray-700 hover:bg-gray-50"
+                    onClick={() => setActiveDropdown(null)}
+                  >
+                    Rewards
+                  </Link>
+                  <button
+                    onClick={() => {
+                      setActiveDropdown(null);
+                      onSignOut();
+                    }}
+                    className="w-full text-left px-4 py-2 text-red-600 hover:bg-red-50"
+                  >
+                    Sign Out
+                  </button>
+                </div>
+              )}
             </div>
           ) : (
-            <button
-              onClick={() => navigate('/auth')}
-              className="hidden sm:inline-block bg-black text-white text-sm px-3 py-1 rounded
-                         hover:bg-white hover:text-black transition"
+            <Link
+              to="/auth"
+              className="text-black hover:text-gray-600 transition"
             >
-              Sign In
-            </button>
+              <FaUser className="w-5 h-5" />
+            </Link>
           )}
 
           {/* Mobile toggle */}

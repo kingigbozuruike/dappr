@@ -76,7 +76,7 @@ export default function ProfilePage() {
     setIsEditingAddress(false);
   };
 
-  // Render each tab’s content
+  // Render each tab's content
   const renderTabContent = () => {
     switch (activeTab) {
       // --------- PROFILE ---------
@@ -367,9 +367,24 @@ export default function ProfilePage() {
                 </div>
               ))}
             </div>
-            <button className="px-4 py-2 text-red-600 hover:text-red-800 transition">
-              Delete Account
-            </button>
+            <div className="space-y-2">
+              <button
+                onClick={() => {
+                  if (window.confirm('Are you sure you want to sign out?')) {
+                    localStorage.removeItem('authToken');
+                    localStorage.removeItem('userName');
+                    localStorage.removeItem('userEmail');
+                    window.location.href = '/';
+                  }
+                }}
+                className="w-full text-left px-4 py-2 text-red-600 hover:bg-red-50 rounded"
+              >
+                Sign Out
+              </button>
+              <button className="px-4 py-2 text-red-600 hover:text-red-800 transition">
+                Delete Account
+              </button>
+            </div>
           </div>
         );
 
@@ -380,11 +395,11 @@ export default function ProfilePage() {
 
   return (
     <div className="pt-24 pb-16 px-6 max-w-4xl mx-auto">
-      <h1 className="text-3xl font-bold mb-8">My Account</h1>
+      <h1 className="text-4xl font-bodoni mb-8">My Account</h1>
 
       {/* Profile picture + upload */}
       <div className="flex items-center mb-8">
-        <div className="relative w-28 h-28 rounded-full overflow-hidden border-2 border-gray-200">
+        <div className="relative w-45 h-45 rounded-full overflow-hidden border-2 border-gray-200">
           <img
             src={profileImage}
             alt="Profile"
@@ -392,7 +407,7 @@ export default function ProfilePage() {
           />
           <button
             onClick={triggerFileInput}
-            className="absolute bottom-1 right-1 bg-black text-white p-2 rounded-full hover:bg-gray-800 transition"
+            className="absolute bottom-2 right-2 bg-black text-white p-2.5 rounded-full hover:bg-gray-800 transition"
             aria-label="Change profile picture"
           >
             <FaCamera className="h-5 w-5" />

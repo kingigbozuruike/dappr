@@ -7,7 +7,7 @@ import {
 } from 'react-router-dom';
 
 import { CartProvider } from './context/CartContext';
-import { UserProvider } from './context/UserContext';
+import { UserProvider, useUser } from './context/UserContext';
 
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
@@ -29,16 +29,22 @@ function AppContent() {
   const [isSignedIn, setIsSignedIn] = useState(false);
   const location = useLocation();
   const isAIAssistantPage = location.pathname === '/ai-assistant';
+  const { setUserData } = useUser();
 
   // On mount, check for stored token
   useEffect(() => {
     const token = localStorage.getItem('authToken');
-    if (token) setIsSignedIn(true);
+    if (token) {
+      setIsSignedIn(true);
+    }
   }, []);
 
   const handleSignOut = () => {
     localStorage.removeItem('authToken');
+    localStorage.removeItem('userName');
+    localStorage.removeItem('userEmail');
     setIsSignedIn(false);
+    setUserData(null);
   };
 
   return (
