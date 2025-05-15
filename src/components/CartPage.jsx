@@ -46,6 +46,11 @@ function CartPage() {
   const [cartItems, setCartItems] = useState([]);
   const [totalPrice, setTotalPrice] = useState(0);
   
+  // Scroll to top when component mounts
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+  
   useEffect(() => {
     // Fetch all products that are in the cart
     const items = [];
@@ -94,7 +99,7 @@ function CartPage() {
           <p className="text-xl mb-6">Your cart is empty</p>
           <Link 
             to="/products" 
-            className="inline-block font-bodoni px-6 py-3 bg-black text-white rounded border border-gray-500 hover:bg-white hover:text-black transition duration-300 active:scale-95"
+            className="text-sm bg-black text-white border border-gray-500 px-4 py-2 rounded hover:bg-white hover:text-black transition duration-300 cursor-pointer"
           >
             Continue Shopping
           </Link>
@@ -132,17 +137,21 @@ function CartPage() {
                       </td>
                       <td className="py-4 px-6">${item.price.toFixed(2)}</td>
                       <td className="py-4 px-6">
-                        <div className="flex items-center border rounded-md max-w-[120px]">
+                        <div className="flex items-center max-w-[120px]">
                           <button
                             onClick={() => decreaseQuantity(item.id, item.category)}
-                            className="w-8 h-8 flex items-center justify-center bg-gray-100"
+                            className="w-8 h-8 flex items-center justify-center bg-black text-white rounded-l border border-black hover:bg-white hover:text-black transition-colors duration-300"
+                            aria-label="Decrease quantity"
                           >
                             -
                           </button>
-                          <span className="mx-3 font-medium">{item.quantity}</span>
+                          <span className="w-10 h-8 flex items-center justify-center border-t border-b border-gray-300 font-medium bg-white">
+                            {item.quantity}
+                          </span>
                           <button
                             onClick={() => increaseQuantity(item.id, item.category)}
-                            className="w-8 h-8 flex items-center justify-center bg-gray-100"
+                            className="w-8 h-8 flex items-center justify-center bg-black text-white rounded-r border border-black hover:bg-white hover:text-black transition-colors duration-300"
+                            aria-label="Increase quantity"
                           >
                             +
                           </button>
@@ -165,13 +174,13 @@ function CartPage() {
               <div className="p-6 flex justify-between items-center">
                 <Link 
                   to="/products" 
-                  className="font-medium text-black hover:underline"
+                  className="text-sm bg-black text-white border border-gray-500 px-4 py-2 rounded hover:bg-white hover:text-black transition duration-300 cursor-pointer"
                 >
                   Continue Shopping
                 </Link>
                 <button
                   onClick={clearCart}
-                  className="font-medium text-red-600 hover:underline"
+                  className="text-sm text-red-600 border border-red-300 px-4 py-2 rounded hover:bg-red-50 transition duration-300 cursor-pointer"
                 >
                   Clear Cart
                 </button>
@@ -204,7 +213,7 @@ function CartPage() {
                 <span>${(totalPrice + (totalPrice * 0.08)).toFixed(2)}</span>
               </div>
               
-              <button className="w-full bg-black text-white py-3 rounded hover:opacity-90 transition-opacity">
+              <button className="w-full text-sm bg-black text-white border border-gray-500 px-4 py-2 rounded hover:bg-white hover:text-black transition duration-300 cursor-pointer">
                 Proceed to Checkout
               </button>
             </div>

@@ -68,6 +68,11 @@ function ProductsPage() {
   const [activeFilter, setActiveFilter] = useState("all");
   const { cart, addToCart, increaseQuantity, decreaseQuantity } = useCart();
   
+  // Scroll to top when component mounts
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+  
   // Filter categories
   const categories = [
     { id: "all", name: "All Products" },
@@ -201,35 +206,37 @@ function ProductsPage() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.5 }}
-              className="bg-white rounded-lg overflow-hidden shadow-md transition-all duration-300 hover:shadow-xl hover:scale-105 group"
+              className="bg-white rounded-lg overflow-hidden shadow-md transition-all duration-300 hover:shadow-xl hover:scale-105 group h-[500px] flex flex-col"
             >
-              <div className="relative overflow-hidden">
+              <div className="relative overflow-hidden h-60 flex-shrink-0">
                 <img
                   src={product.image}
                   alt={product.name}
-                  className="w-full h-60 object-cover filter grayscale transition-all duration-300 group-hover:grayscale-0"
+                  className="w-full h-full object-cover transition-transform duration-500 hover:scale-110"
                 />
               </div>
-              <div className="p-4">
-                <h3 className="font-poppins text-lg font-medium mb-1 line-clamp-2">{product.name}</h3>
-                <p className="text-gray-700 font-semibold">${typeof product.price === 'number' ? product.price.toFixed(2) : product.price}</p>
-                <div className="flex flex-wrap justify-between mt-1 mb-2">
-                  <p className="text-gray-500 text-sm capitalize">
-                    {product.category.replace('-', ' ')}
-                  </p>
-                  {product.type && (
+              <div className="p-4 flex-1 flex flex-col">
+                <div className="flex-grow">
+                  <h3 className="font-poppins text-lg font-medium mb-1 line-clamp-2 h-14 overflow-hidden">{product.name}</h3>
+                  <p className="text-gray-700 font-semibold">${typeof product.price === 'number' ? product.price.toFixed(2) : product.price}</p>
+                  <div className="flex flex-wrap justify-between mt-1 mb-2">
                     <p className="text-gray-500 text-sm capitalize">
-                      {product.type.replace('-', ' ')}
+                      {product.category.replace('-', ' ')}
+                    </p>
+                    {product.type && (
+                      <p className="text-gray-500 text-sm capitalize">
+                        {product.type.replace('-', ' ')}
+                      </p>
+                    )}
+                  </div>
+                  
+                  {/* Show sizes for clothing products */}
+                  {product.category === 'clothing' && product.size && (
+                    <p className="text-gray-500 text-xs mb-2">
+                      Sizes: {product.size.map(s => s.toUpperCase()).join(', ')}
                     </p>
                   )}
                 </div>
-                
-                {/* Show sizes for clothing products */}
-                {product.category === 'clothing' && product.size && (
-                  <p className="text-gray-500 text-xs mb-2">
-                    Sizes: {product.size.map(s => s.toUpperCase()).join(', ')}
-                  </p>
-                )}
                 
                 {cart[`${product.category}-${product.id}`] > 0 ? (
                   <div className="flex flex-col space-y-2">
@@ -237,17 +244,21 @@ function ProductsPage() {
                       <span className="text-green-600 font-medium">Added to cart</span>
                       <span className="font-medium">${(product.price * cart[`${product.category}-${product.id}`]).toFixed(2)}</span>
                     </div>
-                    <div className="flex items-center justify-between border rounded-md p-1">
+                    <div className="flex items-center justify-center mt-2">
                       <button 
                         onClick={() => decreaseQuantity(product.id, product.category)} 
-                        className="w-8 h-8 flex items-center justify-center bg-gray-100 rounded-md hover:bg-gray-200"
+                        className="w-8 h-8 flex items-center justify-center bg-black text-white rounded-l border border-black hover:bg-white hover:text-black transition-colors duration-300"
+                        aria-label="Decrease quantity"
                       >
                         -
                       </button>
-                      <span className="font-medium">{cart[`${product.category}-${product.id}`]}</span>
+                      <span className="w-10 h-8 flex items-center justify-center border-t border-b border-gray-300 font-medium bg-white">
+                        {cart[`${product.category}-${product.id}`]}
+                      </span>
                       <button 
                         onClick={() => increaseQuantity(product.id, product.category)} 
-                        className="w-8 h-8 flex items-center justify-center bg-gray-100 rounded-md hover:bg-gray-200"
+                        className="w-8 h-8 flex items-center justify-center bg-black text-white rounded-r border border-black hover:bg-white hover:text-black transition-colors duration-300"
+                        aria-label="Increase quantity"
                       >
                         +
                       </button>

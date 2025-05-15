@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { FaUser, FaShippingFast, FaCoins, FaCog, FaRecycle, FaHistory, FaCamera } from 'react-icons/fa';
 import { useUser } from '../context/UserContext';
 import { useNavigate, Link } from 'react-router-dom';
@@ -8,6 +8,11 @@ function ProfilePage() {
   const fileInputRef = useRef(null);
   const { profileImage, updateProfileImage, userData, setUserData } = useUser();
   const navigate = useNavigate();
+  
+  // Scroll to top when component mounts
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
   
   // State for edit mode
   const [isEditing, setIsEditing] = useState(false);

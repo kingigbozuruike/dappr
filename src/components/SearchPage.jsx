@@ -27,6 +27,11 @@ function SearchPage() {
   const [allProducts, setAllProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   
+  // Scroll to top when component mounts
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+  
   // Load all products on initial render
   useEffect(() => {
     const products = getAllProducts();

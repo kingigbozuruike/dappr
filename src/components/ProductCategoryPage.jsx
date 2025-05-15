@@ -97,6 +97,11 @@ function ProductCategoryPage() {
   const [filteredProducts, setFilteredProducts] = useState([]);
   const { cart, addToCart, increaseQuantity, decreaseQuantity } = useCart();
   
+  // Scroll to top when component mounts
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+  
   // Load products on category change
   useEffect(() => {
     // Get products for this category
@@ -201,28 +206,30 @@ function ProductCategoryPage() {
                 duration: 0.5,
                 delay: index * 0.05
               }}
-              className="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300"
+              className="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300 h-[500px] flex flex-col"
             >
-              <div className="h-64 overflow-hidden">
+              <div className="h-64 overflow-hidden flex-shrink-0">
                 <img 
                   src={product.image} 
                   alt={product.name}
                   className="w-full h-full object-cover transition-transform duration-500 hover:scale-110" 
                 />
               </div>
-              <div className="p-6">
-                <h3 className="text-xl font-semibold mb-2 font-poppins">{product.name}</h3>
-                <p className="text-gray-700 mb-4">${product.price.toFixed(2)}</p>
-                
-                {/* Display product type */}
-                <p className="text-gray-500 text-sm capitalize mb-4">
-                  Type: {product.type && product.type.replace(/-/g, ' ')}
-                  {category === 'clothing' && product.size && (
-                    <span className="ml-2">
-                      | Sizes: {product.size.map(s => s.toUpperCase()).join(', ')}
-                    </span>
-                  )}
-                </p>
+              <div className="p-6 flex-1 flex flex-col">
+                <div className="flex-grow">
+                  <h3 className="text-xl font-semibold mb-2 font-poppins line-clamp-2 h-14 overflow-hidden">{product.name}</h3>
+                  <p className="text-gray-700 mb-4">${product.price.toFixed(2)}</p>
+                  
+                  {/* Display product type */}
+                  <p className="text-gray-500 text-sm capitalize mb-4">
+                    Type: {product.type && product.type.replace(/-/g, ' ')}
+                    {category === 'clothing' && product.size && (
+                      <span className="ml-2">
+                        | Sizes: {product.size.map(s => s.toUpperCase()).join(', ')}
+                      </span>
+                    )}
+                  </p>
+                </div>
                 
                 {cart[`${category}-${product.id}`] > 0 ? (
                   <div className="flex flex-col space-y-2">
@@ -230,17 +237,21 @@ function ProductCategoryPage() {
                       <span className="text-green-600 font-medium">Added to cart</span>
                       <span className="font-medium">${(product.price * cart[`${category}-${product.id}`]).toFixed(2)}</span>
                     </div>
-                    <div className="flex items-center justify-between border rounded-md p-1">
+                    <div className="flex items-center justify-center mt-2">
                       <button 
                         onClick={() => decreaseQuantity(product.id, category)} 
-                        className="w-8 h-8 flex items-center justify-center bg-gray-100 rounded-md hover:bg-gray-200"
+                        className="w-8 h-8 flex items-center justify-center bg-black text-white rounded-l border border-black hover:bg-white hover:text-black transition-colors duration-300"
+                        aria-label="Decrease quantity"
                       >
                         -
                       </button>
-                      <span className="font-medium">{cart[`${category}-${product.id}`]}</span>
+                      <span className="w-10 h-8 flex items-center justify-center border-t border-b border-gray-300 font-medium bg-white">
+                        {cart[`${category}-${product.id}`]}
+                      </span>
                       <button 
                         onClick={() => increaseQuantity(product.id, category)} 
-                        className="w-8 h-8 flex items-center justify-center bg-gray-100 rounded-md hover:bg-gray-200"
+                        className="w-8 h-8 flex items-center justify-center bg-black text-white rounded-r border border-black hover:bg-white hover:text-black transition-colors duration-300"
+                        aria-label="Increase quantity"
                       >
                         +
                       </button>
