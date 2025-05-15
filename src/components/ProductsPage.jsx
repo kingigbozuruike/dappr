@@ -52,6 +52,7 @@ export default function ProductsPage() {
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [activeFilter, setActiveFilter] = useState("all");
   const [showFilterMenu, setShowFilterMenu] = useState(false);
+  const [displayCount, setDisplayCount] = useState(8);
   const filterMenuRef = useRef();
   const { cart, addToCart, increaseQuantity, decreaseQuantity } = useCart();
 
@@ -234,7 +235,7 @@ export default function ProductsPage() {
       </div>
 
       <h1 className="text-4xl font-bold font-bodoni mb-8 text-center">
-        All Products
+        {activeFilter === "all" ? "All Products" : categories.find(c => c.id === activeFilter)?.name}
       </h1>
 
       {/* desktop: top tabs */}
@@ -271,85 +272,95 @@ export default function ProductsPage() {
           </p>
         </div>
       ) : (
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          {filteredProducts.map((p) => (
-            <motion.div
-              key={`${p.category}-${p.id}`}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.5 }}
-              className="bg-white rounded-lg overflow-hidden shadow-md transition-all duration-300 hover:shadow-xl hover:scale-105 flex flex-col"
-            >
-              <div className="relative overflow-hidden h-60 flex-shrink-0">
-                <img
-                  src={p.image}
-                  alt={p.name}
-                  className="w-full h-full object-cover transition-transform duration-500 hover:scale-110"
-                />
-              </div>
-              <div className="p-4 flex-1 flex flex-col">
-                <h3 className="font-poppins text-lg font-medium mb-1 line-clamp-2">
-                  {p.name}
-                </h3>
-                <p className="text-gray-700 font-semibold">
-                  ${p.price.toFixed(2)}
-                </p>
-                <div className="flex justify-between text-gray-500 text-sm mt-1 mb-2">
-                  <span className="capitalize">
-                    {p.category.replace("-", " ")}
-                  </span>
-                  {p.type && (
-                    <span className="capitalize">{p.type.replace("-", " ")}</span>
+        <>
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-6">
+            {filteredProducts.slice(0, displayCount).map((p) => (
+              <motion.div
+                key={`${p.category}-${p.id}`}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.5 }}
+                className="bg-white rounded-lg overflow-hidden shadow-md transition-transform duration-300 hover:scale-105 group cursor-pointer flex flex-col h-[420px] sm:h-[480px] md:h-[520px]"
+              >
+                <div className="relative overflow-hidden h-40 sm:h-52 md:h-60 flex-shrink-0">
+                  <img
+                    src={p.image}
+                    alt={p.name}
+                    className="w-full h-full object-cover transition-all duration-300"
+                  />
+                </div>
+                <div className="p-3 sm:p-4 flex flex-col flex-1 min-h-0">
+                  <h3 className="font-poppins text-sm sm:text-base md:text-lg font-medium mb-1 line-clamp-2">
+                    {p.name}
+                  </h3>
+                  <p className="text-gray-700 font-semibold mb-2">
+                    ${p.price.toFixed(2)}
+                  </p>
+                  <div className="flex justify-between text-gray-500 text-sm mt-1 mb-2">
+                    <span className="capitalize">
+                      {p.category.replace("-", " ")}
+                    </span>
+                    {p.type && (
+                      <span className="capitalize">{p.type.replace("-", " ")}</span>
+                    )}
+                  </div>
+                  {p.category === "clothing" && p.size && (
+                    <p className="text-gray-500 text-xs mb-2">
+                      Sizes: {p.size.map((s) => s.toUpperCase()).join(", ")}
+                    </p>
+                  )}
+                  {cart[`${p.category}-${p.id}`] > 0 ? (
+                    <div className="mt-auto flex flex-col space-y-2">
+                      <div className="flex items-center justify-between">
+                        <span className="text-green-600 text-xs sm:text-sm font-medium">
+                          Added to cart
+                        </span>
+                        <span className="text-xs sm:text-sm font-medium">
+                          ${(p.price * cart[`${p.category}-${p.id}`]).toFixed(2)}
+                        </span>
+                      </div>
+                      <div className="flex items-center justify-between border rounded-md p-1">
+                        <button
+                          onClick={() => decreaseQuantity(p.id, p.category)}
+                          className="w-8 h-8 flex items-center justify-center bg-black text-white rounded-l border border-black hover:bg-white hover:text-black transition-colors cursor-pointer"
+                        >
+                          –
+                        </button>
+                        <span className="w-10 h-8 flex items-center justify-center border-t border-b border-gray-300 bg-white font-medium">
+                          {cart[`${p.category}-${p.id}`]}
+                        </span>
+                        <button
+                          onClick={() => increaseQuantity(p.id, p.category)}
+                          className="w-8 h-8 flex items-center justify-center bg-black text-white rounded-r border border-black hover:bg-white hover:text-black transition-colors cursor-pointer"
+                        >
+                          +
+                        </button>
+                      </div>
+                    </div>
+                  ) : (
+                    <button
+                      onClick={() => addToCart(p.id, p.category)}
+                      className="mt-auto w-full bg-black text-white text-xs sm:text-sm py-2 px-4 rounded border border-black hover:bg-white hover:text-black transition cursor-pointer"
+                    >
+                      Add to Cart
+                    </button>
                   )}
                 </div>
-                {p.category === "clothing" && p.size && (
-                  <p className="text-gray-500 text-xs mb-2">
-                    Sizes: {p.size.map((s) => s.toUpperCase()).join(", ")}
-                  </p>
-                )}
-
-                {cart[`${p.category}-${p.id}`] > 0 ? (
-                  <div className="mt-auto flex flex-col space-y-2">
-                    <div className="flex justify-between items-center">
-                      <span className="text-green-600 font-medium">
-                        Added to cart
-                      </span>
-                      <span className="font-medium">
-                        ${(p.price * cart[`${p.category}-${p.id}`]).toFixed(2)}
-                      </span>
-                    </div>
-                    <div className="flex justify-between items-center border rounded-md p-1">
-                      <button
-                        onClick={() => decreaseQuantity(p.id, p.category)}
-                        className="w-8 h-8 flex items-center justify-center bg-gray-100 rounded-md hover:bg-gray-200"
-                        aria-label="Decrease"
-                      >
-                        −
-                      </button>
-                      <span className="font-medium">
-                        {cart[`${p.category}-${p.id}`]}
-                      </span>
-                      <button
-                        onClick={() => increaseQuantity(p.id, p.category)}
-                        className="w-8 h-8 flex items-center justify-center bg-gray-100 rounded-md hover:bg-gray-200"
-                        aria-label="Increase"
-                      >
-                        ＋
-                      </button>
-                    </div>
-                  </div>
-                ) : (
-                  <button
-                    onClick={() => addToCart(p.id, p.category)}
-                    className="mt-auto w-full bg-black text-white py-2 rounded hover:bg-gray-800 transition-colors duration-300"
-                  >
-                    Add to Cart
-                  </button>
-                )}
-              </div>
-            </motion.div>
-          ))}
-        </div>
+              </motion.div>
+            ))}
+          </div>
+          
+          {filteredProducts.length > displayCount && (
+            <div className="mt-8 text-center">
+              <button
+                onClick={() => setDisplayCount(prev => prev + 8)}
+                className="font-poppins px-4 sm:px-6 py-2 sm:py-3 text-sm sm:text-base bg-black text-white rounded border border-black hover:bg-white hover:text-black transition duration-300"
+              >
+                Show More
+              </button>
+            </div>
+          )}
+        </>
       )}
     </div>
   );

@@ -93,7 +93,7 @@ export default function CartPage() {
           <p className="text-lg sm:text-xl mb-6">Your cart is empty</p>
           <Link
             to="/products"
-            className="inline-block font-bodoni px-6 py-3 bg-black text-white rounded border border-gray-500 hover:bg-white hover:text-black transition duration-300"
+            className="font-poppins px-6 py-3 bg-black text-white rounded border border-gray-500 hover:bg-white hover:text-black transition duration-300"
           >
             Continue Shopping
           </Link>
@@ -214,7 +214,7 @@ export default function CartPage() {
               <div className="p-4 sm:p-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 sm:gap-0">
                 <Link
                   to="/products"
-                  className="font-medium text-black hover:underline"
+                  className="font-poppins px-6 py-3 bg-black text-white rounded border border-gray-500 hover:bg-white hover:text-black transition duration-300"
                 >
                   Continue Shopping
                 </Link>
@@ -253,7 +253,7 @@ export default function CartPage() {
                 <span>${(totalPrice + (totalPrice * 0.08)).toFixed(2)}</span>
               </div>
               
-              <button className="w-full bg-black text-white py-3 rounded hover:opacity-90 transition-opacity">
+              <button className="w-full font-poppins bg-black text-white py-3 rounded border border-black hover:bg-white hover:text-black transition duration-300">
                 Proceed to Checkout
               </button>
             </div>

@@ -53,16 +53,16 @@ export default function Recommended() {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, ease: "easeOut" }}
             viewport={{ once: true, amount: 0.3 }}
-            className="bg-white rounded-lg overflow-hidden shadow-md transition-transform duration-300 hover:scale-105 group"
+            className="bg-white rounded-lg overflow-hidden shadow-md transition-transform duration-300 hover:scale-105 group cursor-pointer flex flex-col h-[420px] sm:h-[480px] md:h-[520px]"
           >
-            <div className="relative overflow-hidden h-40 sm:h-52 md:h-60">
+            <div className="relative overflow-hidden h-40 sm:h-52 md:h-60 flex-shrink-0">
               <img
                 src={product.image}
                 alt={product.name}
                 className="w-full h-full object-cover filter grayscale transition-all duration-300 group-hover:grayscale-0"
               />
             </div>
-            <div className="p-3 sm:p-4 flex flex-col flex-1">
+            <div className="p-3 sm:p-4 flex flex-col flex-1 min-h-0">
               <h3 className="font-poppins text-sm sm:text-base md:text-lg font-medium mb-1 line-clamp-2">
                 {product.name}
               </h3>
@@ -83,16 +83,16 @@ export default function Recommended() {
                   <div className="flex items-center justify-between border rounded-md p-1">
                     <button
                       onClick={() => decreaseQuantity(product.id, product.category)}
-                      className="w-6 h-6 sm:w-8 sm:h-8 flex items-center justify-center bg-gray-100 rounded-md hover:bg-gray-200"
+                      className="w-8 h-8 flex items-center justify-center bg-black text-white rounded-l border border-black hover:bg-white hover:text-black transition-colors cursor-pointer"
                     >
                       –
                     </button>
-                    <span className="text-sm sm:text-base font-medium">
+                    <span className="w-10 h-8 flex items-center justify-center border-t border-b border-gray-300 bg-white font-medium">
                       {cart[`${product.category}-${product.id}`]}
                     </span>
                     <button
                       onClick={() => increaseQuantity(product.id, product.category)}
-                      className="w-6 h-6 sm:w-8 sm:h-8 flex items-center justify-center bg-gray-100 rounded-md hover:bg-gray-200"
+                      className="w-8 h-8 flex items-center justify-center bg-black text-white rounded-r border border-black hover:bg-white hover:text-black transition-colors cursor-pointer"
                     >
                       +
                     </button>
@@ -101,7 +101,7 @@ export default function Recommended() {
               ) : (
                 <button
                   onClick={() => addToCart(product.id, product.category)}
-                  className="mt-auto w-full bg-black text-white text-xs sm:text-sm py-2 px-4 rounded hover:bg-gray-800 transition-colors duration-300"
+                  className="mt-auto w-full bg-black text-white text-xs sm:text-sm py-2 px-4 rounded border border-black hover:bg-white hover:text-black transition cursor-pointer"
                 >
                   Add to Cart
                 </button>
@@ -114,7 +114,7 @@ export default function Recommended() {
       <div className="mt-8 sm:mt-10 text-center">
         <Link
           to="/products"
-          className="font-bodoni px-4 sm:px-6 py-2 sm:py-3 text-sm sm:text-base bg-black text-white rounded border border-gray-500 hover:bg-white hover:text-black transition duration-300 active:scale-95"
+          className="font-poppins px-4 sm:px-6 py-2 sm:py-3 text-sm sm:text-base bg-black text-white rounded border border-gray-500 hover:bg-white hover:text-black transition duration-300 active:scale-95"
         >
           View All Products
         </Link>

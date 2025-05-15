@@ -109,7 +109,7 @@ export default function Navbar({ isSignedIn, onSignOut }) {
         </Link>
 
         {/* Desktop nav */}
-        <nav className="hidden md:flex space-x-6 font-poppins text-sm text-gray-800 relative">
+        <nav className="hidden md:flex space-x-6 font-poppins text-[15px] text-gray-800 relative">
           {Object.entries(navItems).map(([cat, items]) => (
             <div
               key={cat}
@@ -148,7 +148,7 @@ export default function Navbar({ isSignedIn, onSignOut }) {
           <button
             onClick={() => navigate('/recycle')}
             className="hidden sm:inline-block bg-black text-white text-xs sm:text-sm
-                       px-4 py-2 rounded border border-black hover:bg-white hover:text-black transition"
+                       px-4 py-2 rounded border border-black hover:bg-white hover:text-black transition cursor-pointer"
           >
             Recycle Now!
           </button>
@@ -159,7 +159,7 @@ export default function Navbar({ isSignedIn, onSignOut }) {
             className="hidden sm:inline-flex items-center gap-1 text-xs sm:text-sm
                        bg-gradient-to-r from-purple-600 to-blue-600 px-4 py-2 rounded
                        border border-transparent hover:border-purple-600 hover:from-white hover:to-white
-                       hover:text-purple-600 transition"
+                       hover:text-purple-600 transition cursor-pointer"
           >
             AI Stylist
           </button>
@@ -189,9 +189,9 @@ export default function Navbar({ isSignedIn, onSignOut }) {
             ) : (
               <button
                 onClick={() => setShowSearch(true)}
-                className="text-black hover:text-gray-600 transition"
+                className="text-black hover:text-gray-600 transition cursor-pointer flex items-center"
               >
-                <HiOutlineSearch className="w-6 h-6" />
+                <HiOutlineSearch className="w-5 h-5" />
               </button>
             )}
           </div>
