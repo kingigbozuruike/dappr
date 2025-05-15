@@ -1,9 +1,9 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { HiOutlineSearch, HiOutlineShoppingBag } from 'react-icons/hi';
-import { RiCoinsLine } from 'react-icons/ri';
-import { FaUser } from 'react-icons/fa';
+import { FaCoins } from 'react-icons/fa';
 import { useState, useRef } from 'react';
 import { useCart } from '../context/CartContext';
+import { useUser } from '../context/UserContext';
 
 function Navbar({ isSignedIn, onSignOut }) {
   const navigate = useNavigate();
@@ -11,7 +11,8 @@ function Navbar({ isSignedIn, onSignOut }) {
   const dropdownRefs = useRef({});
   const [showProfileMenu, setShowProfileMenu] = useState(false);
   const { totalItems } = useCart();
-
+  const { profileImage, userData } = useUser();
+  
   const handleLogoClick = (e) => {
     e.preventDefault();
     window.scrollTo(0, 0);
@@ -93,14 +94,14 @@ function Navbar({ isSignedIn, onSignOut }) {
               {/* Dropdown menu */}
               {activeDropdown === category && (
                 <div
-                  className="absolute top-full left-0 z-30 mt-0"
+                  className="absolute top-full left-0 z-30 mt-0 bg-white/90 backdrop-blur-md backdrop-saturate-150 shadow-md rounded-b px-4 py-2 min-w-[160px]"
                 >
-                  <div className="text-sm font-poppins py-4">
+                  <div className="text-sm font-poppins py-2">
                     {items.map((item) => (
                       <Link
                         key={item.name}
                         to={item.href}
-                        className="block text-black hover:text-gray-700 transition py-1"
+                        className="block text-black hover:text-gray-400 transition duration-200 py-2 border-b border-transparent hover:border-gray-400 cursor-pointer"
                       >
                         {item.name}
                       </Link>
@@ -134,9 +135,12 @@ function Navbar({ isSignedIn, onSignOut }) {
 
           {isSignedIn && (
             <>
-              <div className="flex items-center space-x-1 text-black cursor-pointer">
-                <RiCoinsLine className="w-6 h-6" />
-                <span className="font-medium">450</span>
+              <div 
+                className="flex items-center space-x-1 text-black cursor-pointer hover:text-gray-600 transition-colors"
+                onClick={() => navigate('/profile?tab=rewards')}
+              >
+                <FaCoins className="w-5 h-5" />
+                <span className="font-medium">{userData.recyclePoints}</span>
               </div>
             </>
           )}
@@ -153,43 +157,56 @@ function Navbar({ isSignedIn, onSignOut }) {
           {isSignedIn ? (
             <div className="relative">
               <button 
-                className="flex items-center justify-center w-9 h-9 bg-black text-white rounded-full hover:bg-gray-800 transition-colors focus:outline-none hover:cursor-pointer"
+                className="w-9 h-9 rounded-full overflow-hidden border border-gray-200 hover:opacity-90 transition-opacity focus:outline-none cursor-pointer"
                 onClick={() => setShowProfileMenu(!showProfileMenu)}
               >
-                <FaUser className="w-4 h-4" />
+                <img 
+                  src={profileImage} 
+                  alt="Profile" 
+                  className="w-full h-full object-cover"
+                />
               </button>
               
               {showProfileMenu && (
-                <div className="absolute right-0 mt-2 w-48 bg-white/90 backdrop-blur-md backdrop-saturate-150 border border-gray-200/50 rounded shadow-lg py-2 z-50">
-                  <div className="px-4 py-2 border-b border-gray-100">
-                    <p className="font-medium">David Orisakwe</p>
-                    <p className="text-sm text-gray-500">orisakwe@gmail.com</p>
+                <div className="absolute right-0 mt-2 w-64 bg-white/90 backdrop-blur-md backdrop-saturate-150 border border-gray-200/50 rounded shadow-lg py-2 z-50">
+                  <div className="px-4 py-2 border-b border-gray-100 flex items-start space-x-3">
+                    <div className="w-10 h-10 rounded-full overflow-hidden border border-gray-200 flex-shrink-0">
+                      <img 
+                        src={profileImage} 
+                        alt="Profile"
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                    <div className="overflow-hidden">
+                      <p className="font-medium truncate">{userData.name}</p>
+                      <p className="text-sm text-gray-500 truncate">{userData.email}</p>
+                    </div>
                   </div>
                   
                   <Link 
                     to="/profile" 
-                    className="block px-4 py-2 text-sm hover:bg-gray-100 transition"
+                    className="block px-4 py-2 text-sm text-black hover:text-gray-400 transition duration-200 border-b border-transparent hover:border-gray-400 cursor-pointer"
                     onClick={() => setShowProfileMenu(false)}
                   >
                     My Profile
                   </Link>
                   <Link 
                     to="/orders" 
-                    className="block px-4 py-2 text-sm hover:bg-gray-100 transition"
+                    className="block px-4 py-2 text-sm text-black hover:text-gray-400 transition duration-200 border-b border-transparent hover:border-gray-400 cursor-pointer"
                     onClick={() => setShowProfileMenu(false)}
                   >
                     My Orders
                   </Link>
                   <Link 
                     to="/recycle/history" 
-                    className="block px-4 py-2 text-sm hover:bg-gray-100 transition"
+                    className="block px-4 py-2 text-sm text-black hover:text-gray-400 transition duration-200 border-b border-transparent hover:border-gray-400 cursor-pointer"
                     onClick={() => setShowProfileMenu(false)}
                   >
                     Recycling History
                   </Link>
                   <div className="border-t border-gray-100 mt-2 pt-1">
                     <button 
-                      className="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100 transition"
+                      className="block w-full text-left px-4 py-2 text-sm text-red-600 hover:text-red-400 transition duration-200 border-b border-transparent hover:border-red-400 cursor-pointer"
                       onClick={() => {
                         onSignOut();
                         setShowProfileMenu(false);

@@ -36,7 +36,7 @@ function Footer() {
             {/* Back to Top Button */}
             <button
                 onClick={scrollToTop}
-                className="fixed bottom-8 right-8 bg-black text-white p-3 rounded-full border border-gray-500 hover:bg-white hover:text-black transition duration-300 active:scale-95 shadow-lg"
+                className="fixed bottom-8 right-8 bg-black text-white p-3 rounded-full border border-gray-500 hover:bg-white hover:text-black transition duration-300 active:scale-95 shadow-lg cursor-pointer z-50"
                 aria-label="Back to top"
             >
                 <FaArrowUp className="w-6 h-6" />
@@ -58,16 +58,16 @@ function Footer() {
                     
                     {/* Social Media Icons */}
                     <div className="flex space-x-4">
-                        <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="hover:text-gray-300 transition-colors">
+                        <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="hover:text-gray-300 transition-colors cursor-pointer">
                             <FaFacebook className="w-6 h-6" />
                         </a>
-                        <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="hover:text-gray-300 transition-colors">
+                        <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="hover:text-gray-300 transition-colors cursor-pointer">
                             <FaTwitter className="w-6 h-6" />
                         </a>
-                        <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="hover:text-gray-300 transition-colors">
+                        <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="hover:text-gray-300 transition-colors cursor-pointer">
                             <FaInstagram className="w-6 h-6" />
                         </a>
-                        <a href="https://github.com/kingigbozuruike/dappr/" target="_blank" rel="noopener noreferrer" className="hover:text-gray-300 transition-colors">
+                        <a href="https://github.com/kingigbozuruike/dappr/" target="_blank" rel="noopener noreferrer" className="hover:text-gray-300 transition-colors cursor-pointer">
                             <FaGithub className="w-6 h-6" />
                         </a>
                     </div>
@@ -114,7 +114,7 @@ function Footer() {
                     </div>
                     <button
                         type="submit"
-                        className="w-full bg-black text-white px-4 py-2 rounded border border-gray-500 hover:bg-white hover:text-black transition duration-300 active:scale-95"
+                        className="w-full bg-black text-white px-4 py-2 rounded border border-gray-500 hover:bg-white hover:text-black transition duration-300 active:scale-95 cursor-pointer"
                     >
                         Send Message
                     </button>
