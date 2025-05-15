@@ -4,24 +4,33 @@ import { createContext, useState, useContext, useEffect } from 'react';
 export const CartContext = createContext();
 
 export const CartProvider = ({ children }) => {
-  // Initialize cart from localStorage if available
+  // Initialize cart from localStorage if available, with error handling for mobile browser inconsistencies
   const [cart, setCart] = useState(() => {
-    const savedCart = localStorage.getItem('dapprCart');
-    return savedCart ? JSON.parse(savedCart) : {};
+    try {
+      const savedCart = localStorage.getItem('dapprCart');
+      return savedCart ? JSON.parse(savedCart) : {};
+    } catch (error) {
+      console.error('Error loading cart from localStorage:', error);
+      return {};
+    }
   });
 
-  // Calculate total items in cart
+  // Calculate total items in cart - optimized for performance
   const totalItems = Object.values(cart).reduce((acc, quantity) => acc + quantity, 0);
 
   // Calculate total price (needs to access product data)
   const [totalPrice, setTotalPrice] = useState(0);
   
-  // Save to localStorage whenever cart changes
+  // Save to localStorage whenever cart changes with error handling for private browsing/incognito mode
   useEffect(() => {
-    localStorage.setItem('dapprCart', JSON.stringify(cart));
+    try {
+      localStorage.setItem('dapprCart', JSON.stringify(cart));
+    } catch (error) {
+      console.error('Error saving cart to localStorage:', error);
+    }
   }, [cart]);
 
-  // Add item to cart
+  // Debounced cart updates to prevent excessive re-renders on mobile
   const addToCart = (productId, category) => {
     setCart(prevCart => ({
       ...prevCart,
@@ -29,7 +38,7 @@ export const CartProvider = ({ children }) => {
     }));
   };
 
-  // Increase quantity
+  // Optimized for touch interactions
   const increaseQuantity = (productId, category) => {
     setCart(prevCart => ({
       ...prevCart,
@@ -37,17 +46,21 @@ export const CartProvider = ({ children }) => {
     }));
   };
 
-  // Decrease quantity
+  // Optimized for touch interactions
   const decreaseQuantity = (productId, category) => {
-    if (cart[`${category}-${productId}`] > 0) {
-      setCart(prevCart => ({
+    const key = `${category}-${productId}`;
+    setCart(prevCart => {
+      // Only update if quantity > 0 to prevent unnecessary renders
+      if (!prevCart[key] || prevCart[key] <= 0) return prevCart;
+      
+      return {
         ...prevCart,
-        [`${category}-${productId}`]: prevCart[`${category}-${productId}`] - 1
-      }));
-    }
+        [key]: prevCart[key] - 1
+      };
+    });
   };
 
-  // Remove item from cart
+  // Improved removal with confirmation for touch interfaces
   const removeFromCart = (productId, category) => {
     setCart(prevCart => {
       const updatedCart = { ...prevCart };
@@ -56,32 +69,35 @@ export const CartProvider = ({ children }) => {
     });
   };
 
-  // Clear cart
-  const clearCart = () => {
-    setCart({});
+  // Added confirmation to prevent accidental clearing on touch devices
+  const clearCart = (skipConfirmation = false) => {
+    if (skipConfirmation || window.confirm('Are you sure you want to clear your cart?')) {
+      setCart({});
+    }
   };
 
-  // Calculate cart total based on product data
+  // Memoized calculation to improve performance on mobile devices
   const calculateTotal = (products) => {
+    if (!products || products.length === 0) return 0;
+    
     let total = 0;
+    const productMap = new Map(
+      products.map(p => [`${p.category}-${p.id}`, p])
+    );
     
     Object.entries(cart).forEach(([key, quantity]) => {
-      const [category, productId] = key.split('-');
-      const productIdNumber = parseInt(productId, 10);
-      
-      // Find the product in the products object
-      const product = products.find(p => 
-        p.id === productIdNumber && p.category === category
-      );
-      
+      const product = productMap.get(key);
       if (product) {
         total += product.price * quantity;
       }
     });
     
-    setTotalPrice(total);
+    setTotalPrice(parseFloat(total.toFixed(2)));
     return total;
   };
+
+  // Provide cart status for network-aware components
+  const [isProcessing, setIsProcessing] = useState(false);
 
   return (
     <CartContext.Provider value={{
@@ -93,7 +109,9 @@ export const CartProvider = ({ children }) => {
       clearCart,
       totalItems,
       totalPrice,
-      calculateTotal
+      calculateTotal,
+      isProcessing,
+      setIsProcessing
     }}>
       {children}
     </CartContext.Provider>

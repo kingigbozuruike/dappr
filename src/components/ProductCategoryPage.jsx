@@ -1,10 +1,11 @@
 import { motion } from "framer-motion";
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { useParams } from "react-router-dom";
+import { FaFilter, FaTimes } from "react-icons/fa";
 import { useCart } from "../context/CartContext";
 import ProductFilter from "./ProductFilter";
 
-// Demo products data with placeholder images for each category
+// --- your demo data ---
 export const productsByCategory = {
   clothing: [
     { id: 1, name: "Eco-friendly Cotton Dress", price: 89.99, image: "/src/assets/products/product1.webp", type: "dresses", size: ["s", "m", "l"] },
@@ -72,195 +73,214 @@ export const productsByCategory = {
     { id: 14, name: "Sustainable Sheet Masks Set", price: 24.99, image: "/src/assets/testing2.png", type: "mask" },
     { id: 15, name: "Eco-conscious Facial Roller", price: 45.99, image: "/src/assets/testing3.png", type: "accessories" },
     { id: 16, name: "Zero-waste Night Cream", price: 36.99, image: "/src/assets/testing4.png", type: "moisturizer" },
-  ],
+  ]
 };
 
-// Helper to convert category title to slug format
-const getCategorySlug = (title) => {
-  return title.toLowerCase().replace(/\s+/g, '-');
-};
+// map slug → pretty
+const getCategoryTitle = (slug) => ({
+  clothing:   "Clothing",
+  hair:       "Hair",
+  makeup:     "Makeup",
+  "skin-care":"Skin Care",
+}[slug] || slug.charAt(0).toUpperCase() + slug.slice(1));
 
-// Helper to convert slug back to title format
-const getCategoryTitle = (slug) => {
-  const titles = {
-    'clothing': 'Clothing',
-    'hair': 'Hair',
-    'makeup': 'Makeup',
-    'skin-care': 'Skin Care',
-  };
-  return titles[slug] || slug.charAt(0).toUpperCase() + slug.slice(1);
-};
 
 function ProductCategoryPage() {
   const { category } = useParams();
-  const [products, setProducts] = useState([]);
-  const [filteredProducts, setFilteredProducts] = useState([]);
+  const [products, setProducts]           = useState([]);
+  const [filteredProducts, setFiltered]   = useState([]);
   const { cart, addToCart, increaseQuantity, decreaseQuantity } = useCart();
-  
-  // Scroll to top when component mounts
+
+  // for mobile filter panel
+  const [showFilterMenu, setShowFilterMenu] = useState(false);
+  const filterRef = useRef();
+
+  // load & reset on category change
   useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
-  
-  // Load products on category change
-  useEffect(() => {
-    // Get products for this category
-    const categoryProducts = productsByCategory[category] || [];
-    setProducts(categoryProducts);
-    setFilteredProducts(categoryProducts);
+    window.scrollTo(0,0);
+    const list = productsByCategory[category] || [];
+    setProducts(list);
+    setFiltered(list);
   }, [category]);
 
-  // Handle filter changes
+  // handle filter changes
   const handleFilterChange = useCallback((filters) => {
     let result = [...products];
-    
-    // Sort products
+    // --- sort ---
     if (filters.sort !== "Recommended") {
       switch(filters.sort) {
-        case "Price: Low to High":
-          result.sort((a, b) => a.price - b.price);
-          break;
-        case "Price: High to Low":
-          result.sort((a, b) => b.price - a.price);
-          break;
-        case "Name: A to Z":
-          result.sort((a, b) => a.name.localeCompare(b.name));
-          break;
-        case "Name: Z to A":
-          result.sort((a, b) => b.name.localeCompare(a.name));
-          break;
-        default:
-          // Keep default order for "Recommended"
-          break;
+        case "Price: Low to High":  result.sort((a,b)=>a.price-b.price); break;
+        case "Price: High to Low":  result.sort((a,b)=>b.price-a.price); break;
+        case "Name: A to Z":        result.sort((a,b)=>a.name.localeCompare(b.name)); break;
+        case "Name: Z to A":        result.sort((a,b)=>b.name.localeCompare(a.name)); break;
       }
     }
-    
-    // Filter by price range
+    // --- price range ---
     if (filters.priceRange !== "All Prices") {
-      switch(filters.priceRange) {
-        case "Under $25":
-          result = result.filter(p => p.price < 25);
-          break;
-        case "$ 25 - $ 50":
-          result = result.filter(p => p.price >= 25 && p.price <= 50);
-          break;
-        case "$ 50 - $ 100":
-          result = result.filter(p => p.price > 50 && p.price <= 100);
-          break;
-        case "Over $ 100":
-          result = result.filter(p => p.price > 100);
-          break;
-        default:
-          break;
+      const p = filters.priceRange;
+      if (p === "Under $25")      result = result.filter(p=>p.price<25);
+      else if (p === "$ 25 - $ 50") result = result.filter(p=>p.price>=25 && p.price<=50);
+      else if (p === "$ 50 - $ 100")result = result.filter(p=>p.price>50  && p.price<=100);
+      else if (p === "Over $ 100") result = result.filter(p=>p.price>100);
+    }
+    // --- type ---
+    if (filters.type !== "All Types") {
+      const tVal = filters.type.toLowerCase().replace(/\s+/g,'-');
+      result = result.filter(p=>p.type===tVal);
+    }
+    // --- size (only clothing) ---
+    if (category==="clothing" && filters.size!=="All Sizes") {
+      const sz = filters.size.toLowerCase();
+      result = result.filter(p=>Array.isArray(p.size) && p.size.includes(sz));
+    }
+
+    setFiltered(result);
+  }, [products, category]);
+
+  // toggle mobile filter panel
+  const toggleFilterMenu = () => setShowFilterMenu(v=>!v);
+
+  // close on outside click
+  useEffect(() => {
+    function onClick(e) {
+      if (filterRef.current && !filterRef.current.contains(e.target)
+          && !e.target.closest('[data-filter-toggle]')) {
+        setShowFilterMenu(false);
       }
     }
-    
-    // Filter by product type
-    if (filters.type !== "All Types") {
-      // Convert the label to the value format as stored in the product data
-      const typeValue = filters.type.toLowerCase().replace(/\s+/g, '-');
-      result = result.filter(p => p.type === typeValue);
-    }
-    
-    // Filter by size (clothing only)
-    if (category === 'clothing' && filters.size !== "All Sizes") {
-      const sizeValue = filters.size.toLowerCase();
-      result = result.filter(p => p.size && p.size.includes(sizeValue));
-    }
-    
-    setFilteredProducts(result);
-  }, [products, category]);
+    document.addEventListener("mousedown", onClick);
+    return () => document.removeEventListener("mousedown", onClick);
+  }, []);
 
   return (
     <div className="container mx-auto px-4 py-12">
-      <motion.h1 
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6 }}
+      {/* 1) Title */}
+      <motion.h1
+        initial={{ opacity:0, y:-20 }}
+        animate={{ opacity:1, y:0 }}
+        transition={{ duration:0.6 }}
         className="pt-10 text-4xl font-bold font-bodoni mb-8 text-center"
       >
         {getCategoryTitle(category)}
       </motion.h1>
-      
-      {/* Product filter component */}
-      <ProductFilter category={category} onFilterChange={handleFilterChange} />
-      
+
+      {/* 2) Mobile filter button */}
+      <div className="fixed top-20 right-4 z-40 md:hidden">
+        <button
+          onClick={toggleFilterMenu}
+          data-filter-toggle
+          className="flex items-center justify-center bg-black text-white p-3 rounded-full shadow-lg"
+        >
+          <FaFilter className="h-5 w-5" />
+        </button>
+      </div>
+
+      {/* 3) Desktop filter always visible */}
+      <div className="hidden md:block mb-8">
+        <ProductFilter
+          category={category}
+          onFilterChange={handleFilterChange}
+          isMobile={false}
+        />
+      </div>
+
+      {/* 4) Mobile overlay */}
+      <div
+        onClick={toggleFilterMenu}
+        className={`fixed inset-0 bg-black/30 backdrop-blur-sm z-40 md:hidden
+                    transition-opacity duration-300
+                    ${showFilterMenu ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
+      />
+
+      {/* 5) Mobile slide-in panel */}
+      <div
+        ref={filterRef}
+        className={`fixed top-0 right-0 w-3/4 h-full bg-white z-50 shadow-xl md:hidden
+                    transform transition-transform duration-300
+                    ${showFilterMenu ? 'translate-x-0' : 'translate-x-full'}`}
+        style={{ paddingTop: '1rem' }}
+      >
+        <div className="p-4">
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-xl font-semibold">Filters</h3>
+            <button onClick={toggleFilterMenu} className="text-gray-600 hover:text-gray-800">
+              <FaTimes className="h-5 w-5" />
+            </button>
+          </div>
+          <div className="overflow-y-auto" style={{ maxHeight: 'calc(100vh - 5rem)' }}>
+            <ProductFilter
+              category={category}
+              onFilterChange={handleFilterChange}
+              isMobile={true}
+              onClose={toggleFilterMenu}
+            />
+          </div>
+        </div>
+      </div>
+
+      {/* 6) Product grid */}
       {filteredProducts.length === 0 ? (
         <div className="text-center py-10">
           <p className="text-xl text-gray-600">No products found matching your filters.</p>
           <p className="mt-2 text-gray-500">Try adjusting your filter criteria.</p>
         </div>
       ) : (
-        <motion.div 
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.6, delay: 0.2 }}
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8"
+        <motion.div
+          initial={{ opacity:0 }}
+          animate={{ opacity:1 }}
+          transition={{ duration:0.6, delay:0.2 }}
+          className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-6"
         >
-          {filteredProducts.map((product, index) => (
+          {filteredProducts.map((product, idx) => (
             <motion.div
               key={product.id}
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ 
-                duration: 0.5,
-                delay: index * 0.05
-              }}
-              className="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300 h-[500px] flex flex-col"
+              initial={{ opacity:0, y:30 }}
+              animate={{ opacity:1, y:0 }}
+              transition={{ duration:0.5, delay: idx * 0.05 }}
+              className="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300"
             >
-              <div className="h-64 overflow-hidden flex-shrink-0">
-                <img 
-                  src={product.image} 
+              <div className="h-40 sm:h-52 md:h-64 overflow-hidden">
+                <img
+                  src={product.image}
                   alt={product.name}
-                  className="w-full h-full object-cover transition-transform duration-500 hover:scale-110" 
+                  className="w-full h-full object-cover transition-transform duration-500 hover:scale-110"
                 />
               </div>
-              <div className="p-6 flex-1 flex flex-col">
-                <div className="flex-grow">
-                  <h3 className="text-xl font-semibold mb-2 font-poppins line-clamp-2 h-14 overflow-hidden">{product.name}</h3>
-                  <p className="text-gray-700 mb-4">${product.price.toFixed(2)}</p>
-                  
-                  {/* Display product type */}
-                  <p className="text-gray-500 text-sm capitalize mb-4">
-                    Type: {product.type && product.type.replace(/-/g, ' ')}
-                    {category === 'clothing' && product.size && (
-                      <span className="ml-2">
-                        | Sizes: {product.size.map(s => s.toUpperCase()).join(', ')}
-                      </span>
-                    )}
-                  </p>
-                </div>
-                
+              <div className="p-3 sm:p-6 flex flex-col">
+                <h3 className="text-sm sm:text-xl font-semibold mb-1 sm:mb-2 line-clamp-2 font-poppins">
+                  {product.name}
+                </h3>
+                <p className="text-gray-700 mb-2 sm:mb-4">${product.price.toFixed(2)}</p>
                 {cart[`${category}-${product.id}`] > 0 ? (
                   <div className="flex flex-col space-y-2">
                     <div className="flex items-center justify-between">
-                      <span className="text-green-600 font-medium">Added to cart</span>
-                      <span className="font-medium">${(product.price * cart[`${category}-${product.id}`]).toFixed(2)}</span>
+                      <span className="text-green-600 text-xs sm:text-sm font-medium">Added</span>
+                      <span className="text-xs sm:text-sm font-medium">
+                        ${(product.price * cart[`${category}-${product.id}`]).toFixed(2)}
+                      </span>
                     </div>
-                    <div className="flex items-center justify-center mt-2">
-                      <button 
-                        onClick={() => decreaseQuantity(product.id, category)} 
-                        className="w-8 h-8 flex items-center justify-center bg-black text-white rounded-l border border-black hover:bg-white hover:text-black transition-colors duration-300"
-                        aria-label="Decrease quantity"
+                    <div className="flex items-center justify-between border rounded-md p-1">
+                      <button
+                        onClick={() => decreaseQuantity(product.id, category)}
+                        className="w-6 h-6 sm:w-8 sm:h-8 flex items-center justify-center bg-gray-100 rounded-md hover:bg-gray-200"
                       >
-                        -
+                        −
                       </button>
-                      <span className="w-10 h-8 flex items-center justify-center border-t border-b border-gray-300 font-medium bg-white">
+                      <span className="text-xs sm:text-base font-medium">
                         {cart[`${category}-${product.id}`]}
                       </span>
-                      <button 
-                        onClick={() => increaseQuantity(product.id, category)} 
-                        className="w-8 h-8 flex items-center justify-center bg-black text-white rounded-r border border-black hover:bg-white hover:text-black transition-colors duration-300"
-                        aria-label="Increase quantity"
+                      <button
+                        onClick={() => increaseQuantity(product.id, category)}
+                        className="w-6 h-6 sm:w-8 sm:h-8 flex items-center justify-center bg-gray-100 rounded-md hover:bg-gray-200"
                       >
                         +
                       </button>
                     </div>
                   </div>
                 ) : (
-                  <button 
-                    onClick={() => addToCart(product.id, category)} 
-                    className="w-full bg-black text-white py-2 px-4 rounded hover:bg-gray-800 transition-colors duration-300"
+                  <button
+                    onClick={() => addToCart(product.id, category)}
+                    className="mt-auto w-full bg-black text-white text-xs sm:text-sm py-2 px-4 rounded hover:bg-gray-800 transition-colors duration-300"
                   >
                     Add to Cart
                   </button>
