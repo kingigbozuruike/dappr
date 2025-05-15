@@ -8,7 +8,7 @@ import ProductFilter from "./ProductFilter";
 // --- your demo data ---
 export const productsByCategory = {
   clothing: [
-    { id: 1, name: "Eco-friendly Cotton Dress", price: 89.99, image: "/src/assets/products/product1.webp", type: "dresses", size: ["s", "m", "l"] },
+    { id: 1, name: "Eco-friendly Cotton Dress", price: 89.99, image: "/src/assets/products/Model for eco dress front.png", type: "dresses", size: ["s", "m", "l"] },
     { id: 2, name: "Sustainable Denim Jeans", price: 79.99, image: "/src/assets/products/product2.webp", type: "bottoms", size: ["xs", "s", "m", "l", "xl"] },
     { id: 3, name: "Organic Linen Shirt", price: 59.99, image: "/src/assets/products/product3.webp", type: "tops", size: ["s", "m", "l", "xl"] },
     { id: 4, name: "Recycled Polyester Jacket", price: 129.99, image: "/src/assets/products/product4.jpg", type: "outerwear", size: ["m", "l", "xl"] },
@@ -169,7 +169,7 @@ function ProductCategoryPage() {
         <button
           onClick={toggleFilterMenu}
           data-filter-toggle
-          className="flex items-center justify-center bg-black text-white p-3 rounded-full shadow-lg"
+          className="bg-black text-white p-3 rounded-full shadow-lg border-2 border-white hover:bg-white hover:text-black hover:border-black transition duration-300 cursor-pointer"
         >
           <FaFilter className="h-5 w-5" />
         </button>
@@ -195,26 +195,25 @@ function ProductCategoryPage() {
       {/* 5) Mobile slide-in panel */}
       <div
         ref={filterRef}
-        className={`fixed top-0 right-0 w-3/4 h-full bg-white z-50 shadow-xl md:hidden
-                    transform transition-transform duration-300
+        className={`fixed top-0 right-0 w-3/4 h-full bg-white z-50 shadow-xl transform transition-transform duration-300
                     ${showFilterMenu ? 'translate-x-0' : 'translate-x-full'}`}
-        style={{ paddingTop: '1rem' }}
       >
         <div className="p-4">
-          <div className="flex items-center justify-between mb-4">
+          <div className="flex justify-between items-center mb-4">
             <h3 className="text-xl font-semibold">Filters</h3>
-            <button onClick={toggleFilterMenu} className="text-gray-600 hover:text-gray-800">
+            <button
+              onClick={toggleFilterMenu}
+              className="p-2 text-gray-500 hover:text-gray-700"
+            >
               <FaTimes className="h-5 w-5" />
             </button>
           </div>
-          <div className="overflow-y-auto" style={{ maxHeight: 'calc(100vh - 5rem)' }}>
-            <ProductFilter
-              category={category}
-              onFilterChange={handleFilterChange}
-              isMobile={true}
-              onClose={toggleFilterMenu}
-            />
-          </div>
+          <ProductFilter
+            category={category}
+            onFilterChange={handleFilterChange}
+            isMobile={true}
+            onClose={toggleFilterMenu}
+          />
         </div>
       </div>
 
@@ -229,7 +228,7 @@ function ProductCategoryPage() {
           initial={{ opacity:0 }}
           animate={{ opacity:1 }}
           transition={{ duration:0.6, delay:0.2 }}
-          className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-6"
+          className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-6"
         >
           {filteredProducts.map((product, idx) => (
             <motion.div
@@ -237,50 +236,67 @@ function ProductCategoryPage() {
               initial={{ opacity:0, y:30 }}
               animate={{ opacity:1, y:0 }}
               transition={{ duration:0.5, delay: idx * 0.05 }}
-              className="bg-white rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300"
+              className="bg-white rounded-lg overflow-hidden shadow-md transition-transform duration-300 hover:scale-105 group cursor-pointer flex flex-col h-[420px] sm:h-[480px] md:h-[520px]"
             >
-              <div className="h-40 sm:h-52 md:h-64 overflow-hidden">
+              <div className="relative overflow-hidden h-48 sm:h-64 md:h-72 flex-shrink-0">
                 <img
                   src={product.image}
                   alt={product.name}
-                  className="w-full h-full object-cover transition-transform duration-500 hover:scale-110"
+                  className="w-full h-full object-cover transition-all duration-300"
                 />
               </div>
-              <div className="p-3 sm:p-6 flex flex-col">
-                <h3 className="text-sm sm:text-xl font-semibold mb-1 sm:mb-2 line-clamp-2 font-poppins">
+              <div className="p-3 sm:p-4 flex flex-col flex-1 min-h-0">
+                <h3 className="font-poppins text-sm sm:text-base md:text-lg font-medium mb-1 line-clamp-2">
                   {product.name}
                 </h3>
-                <p className="text-gray-700 mb-2 sm:mb-4">${product.price.toFixed(2)}</p>
+                <p className="text-gray-700 font-semibold mb-2">
+                  ${product.price.toFixed(2)}
+                </p>
+                <div className="flex justify-between text-gray-500 text-sm mt-1 mb-2">
+                  <span className="capitalize">
+                    {category.replace("-", " ")}
+                  </span>
+                  {product.type && (
+                    <span className="capitalize">{product.type.replace("-", " ")}</span>
+                  )}
+                </div>
+                {category === "clothing" && product.size && (
+                  <p className="text-gray-500 text-xs mb-2">
+                    Sizes: {product.size.map((s) => s.toUpperCase()).join(", ")}
+                  </p>
+                )}
                 {cart[`${category}-${product.id}`] > 0 ? (
-                  <div className="flex flex-col space-y-2">
+                  <div className="mt-auto flex flex-col space-y-2">
                     <div className="flex items-center justify-between">
-                      <span className="text-green-600 text-xs sm:text-sm font-medium">Added</span>
+                      <span className="text-green-600 text-xs sm:text-sm font-medium">
+                        Added to cart
+                      </span>
                       <span className="text-xs sm:text-sm font-medium">
                         ${(product.price * cart[`${category}-${product.id}`]).toFixed(2)}
                       </span>
                     </div>
                     <div className="flex items-center justify-between border rounded-md p-1">
-                      <button
+                      <button 
                         onClick={() => decreaseQuantity(product.id, category)}
-                        className="w-6 h-6 sm:w-8 sm:h-8 flex items-center justify-center bg-gray-100 rounded-md hover:bg-gray-200"
+                        className="w-8 h-8 flex items-center justify-center bg-black text-white rounded-l border border-black hover:bg-white hover:text-black transition-colors cursor-pointer"
                       >
-                        −
+                        –
                       </button>
-                      <span className="text-xs sm:text-base font-medium">
+                      <span className="w-10 h-8 flex items-center justify-center border-t border-b border-gray-300 bg-white font-medium">
                         {cart[`${category}-${product.id}`]}
                       </span>
-                      <button
+                      <button 
                         onClick={() => increaseQuantity(product.id, category)}
-                        className="w-6 h-6 sm:w-8 sm:h-8 flex items-center justify-center bg-gray-100 rounded-md hover:bg-gray-200"
+                        className="w-8 h-8 flex items-center justify-center bg-black text-white rounded-r border border-black hover:bg-white hover:text-black transition-colors cursor-pointer"
                       >
                         +
                       </button>
                     </div>
                   </div>
                 ) : (
-                  <button
+                  <button 
                     onClick={() => addToCart(product.id, category)}
-                    className="mt-auto w-full bg-black text-white text-xs sm:text-sm py-2 px-4 rounded hover:bg-gray-800 transition-colors duration-300"
+                    className="mt-auto w-full bg-black text-white text-xs sm:text-sm py-2 px-4 rounded border border-black hover:bg-white hover:text-black transition cursor-pointer"
                   >
                     Add to Cart
                   </button>

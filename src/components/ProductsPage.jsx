@@ -15,6 +15,7 @@ import Product9 from "../assets/products/product9.jpg";
 import Product10 from "../assets/products/product10.avif";
 import Product11 from "../assets/products/product11.jpg";
 import Product12 from "../assets/products/product12.jpg";
+import Model from "../assets/products/Model for eco dress front.png";
 import { FaFilter, FaTimes } from "react-icons/fa";
 
 // Map file names → imported images
@@ -33,6 +34,7 @@ const getCorrectImagePath = (path) => {
     "product10.avif": Product10,
     "product11.jpg": Product11,
     "product12.jpg": Product12,
+    "Model for eco dress front.png": Model
   };
   return map[name] || path;
 };
@@ -282,7 +284,7 @@ export default function ProductsPage() {
                 transition={{ duration: 0.5 }}
                 className="bg-white rounded-lg overflow-hidden shadow-md transition-transform duration-300 hover:scale-105 group cursor-pointer flex flex-col h-[420px] sm:h-[480px] md:h-[520px]"
               >
-                <div className="relative overflow-hidden h-40 sm:h-52 md:h-60 flex-shrink-0">
+                <div className="relative overflow-hidden h-48 sm:h-64 md:h-72 flex-shrink-0">
                   <img
                     src={p.image}
                     alt={p.name}
