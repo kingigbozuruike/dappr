@@ -1,18 +1,34 @@
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { HiOutlineSearch, HiOutlineShoppingBag } from 'react-icons/hi';
 import { FaCoins } from 'react-icons/fa';
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useCart } from '../context/CartContext';
 import { useUser } from '../context/UserContext';
 
 function Navbar({ isSignedIn, onSignOut }) {
   const navigate = useNavigate();
+  const location = useLocation();
   const [activeDropdown, setActiveDropdown] = useState(null);
   const dropdownRefs = useRef({});
   const [showProfileMenu, setShowProfileMenu] = useState(false);
   const { totalItems } = useCart();
   const { profileImage, userData } = useUser();
+  const [searchQuery, setSearchQuery] = useState('');
+  const [showSearch, setShowSearch] = useState(false);
+  const searchInputRef = useRef(null);
   
+  // Focus search input when search box appears
+  useEffect(() => {
+    if (showSearch && searchInputRef.current) {
+      searchInputRef.current.focus();
+    }
+  }, [showSearch]);
+  
+  // Hide search on route change
+  useEffect(() => {
+    setShowSearch(false);
+  }, [location.pathname]);
+
   const handleLogoClick = (e) => {
     e.preventDefault();
     window.scrollTo(0, 0);
@@ -55,6 +71,15 @@ function Navbar({ isSignedIn, onSignOut }) {
       { name: "Sustainable Practices", href: "/sustainability/practices" },
       { name: "Join Our Mission", href: "/sustainability/join" }
     ]
+  };
+
+  // Handle search submission
+  const handleSearchSubmit = (e) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      navigate(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
+      setSearchQuery('');
+    }
   };
 
   return (
@@ -129,9 +154,41 @@ function Navbar({ isSignedIn, onSignOut }) {
             AI Stylist
           </button>
           
-          <button className="text-black hover:text-gray-600 transition-colors cursor-pointer" onClick={() => navigate('/search')}>
-            <HiOutlineSearch className="w-6 h-6" />
-          </button>
+          <div className="relative">
+            {showSearch ? (
+              <form onSubmit={handleSearchSubmit} className="absolute right-0 top-full mt-2 w-64 flex shadow-md z-50">
+                <input
+                  ref={searchInputRef}
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder="Search products..."
+                  className="w-full border border-gray-300 rounded-l px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-black bg-white"
+                  onBlur={() => {
+                    // Small delay to allow for button click
+                    setTimeout(() => {
+                      if (!searchQuery.trim()) {
+                        setShowSearch(false);
+                      }
+                    }, 200);
+                  }}
+                />
+                <button 
+                  type="submit"
+                  className="bg-black text-white px-3 py-2 rounded-r border border-black"
+                >
+                  <HiOutlineSearch className="w-5 h-5" />
+                </button>
+              </form>
+            ) : (
+              <button 
+                className="text-black hover:text-gray-600 transition-colors cursor-pointer" 
+                onClick={() => setShowSearch(true)}
+              >
+                <HiOutlineSearch className="w-6 h-6" />
+              </button>
+            )}
+          </div>
 
           {isSignedIn && (
             <>

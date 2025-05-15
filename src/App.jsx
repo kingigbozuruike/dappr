@@ -13,6 +13,7 @@ import ProductCategoryPage from "./components/ProductCategoryPage";
 import ProductsPage from "./components/ProductsPage";
 import CartPage from "./components/CartPage";
 import AIAssistant from "./components/AIAssistant";
+import SearchPage from "./components/SearchPage";
 import { CartProvider } from "./context/CartContext";
 import { UserProvider } from "./context/UserContext";
 
@@ -64,6 +65,7 @@ function App() {
                     <Route path="/category/:category" element={<ProductCategoryPage />} />
                     <Route path="/products" element={<ProductsPage />} />
                     <Route path="/cart" element={<CartPage />} />
+                    <Route path="/search" element={<SearchPage />} />
                   </Routes>
                   <Footer />
                 </>
